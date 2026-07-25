@@ -60,7 +60,7 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           cd build/bin
-          zip -r ../../Eldamo-macOS.zip Eldamo.app
+          zip -r ../../Eldamo-macOS.zip *.app
 
       - name: Package Linux Application (.tar.gz)
         if: matrix.os == 'ubuntu-latest'
