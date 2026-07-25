@@ -1,6 +1,34 @@
-
-# Beads / Dolt files (added by bd init)
-.dolt/
+# Data files (keep directory structures via .gitkeep)
+data/*.xml
+dist/*.db
+dist/*.db.bak
 *.db
+*.db.bak
+*.building
+spike/data/*.json
+*.cache.json
+
+# Node & Frontend dependencies & build outputs
+node_modules/
+frontend/node_modules/
+frontend/dist/
+dist-frontend/
+
+# Wails packaging & build outputs
+build/bin/
+
+# Python Virtual Environment & Caches
+.venv/
+__pycache__/
+*.pyc
+
+# Beads / Dolt issue tracking
+.dolt/
 .beads-credential-key
 .beads/proxieddb/
+
+# OS & Editor files
+.DS_Store
+.idea/
+.vscode/
+package.json.md5

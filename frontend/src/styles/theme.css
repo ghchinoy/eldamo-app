@@ -1,0 +1,125 @@
+/* Material 3 Light Theme Tokens */
+html.sl-theme-light, html[data-theme="light"] {
+  color-scheme: light;
+  --md-sys-color-primary: rgb(71 93 145);
+  --md-sys-color-on-primary: rgb(255 255 255);
+  --md-sys-color-primary-container: rgb(217 226 255);
+  --md-sys-color-on-primary-container: rgb(46 69 120);
+  --md-sys-color-background: rgb(250 248 255);
+  --md-sys-color-on-background: rgb(26 27 32);
+  --md-sys-color-surface: rgb(250 248 255);
+  --md-sys-color-on-surface: rgb(26 27 32);
+  --md-sys-color-surface-container-low: rgb(244 243 250);
+  --md-sys-color-surface-container: rgb(238 237 244);
+  --md-sys-color-surface-container-high: rgb(232 231 239);
+  --md-sys-color-surface-container-highest: rgb(226 226 233);
+  --md-sys-color-outline: rgb(117 119 128);
+  --md-sys-color-outline-variant: rgb(197 198 208);
+
+  /* Eldamo Mapped Tokens (Light) */
+  --eldamo-bg: var(--md-sys-color-background);
+  --eldamo-surface: var(--md-sys-color-surface-container-low);
+  --eldamo-surface-border: var(--md-sys-color-outline-variant);
+  --eldamo-primary: var(--md-sys-color-primary);
+  --eldamo-accent: var(--md-sys-color-primary);
+  --eldamo-accent-blue: var(--md-sys-color-primary);
+  --eldamo-gold: var(--md-sys-color-primary);
+  --eldamo-gold-bright: rgb(46 69 120);
+  --eldamo-gold-muted: rgb(117 119 128);
+  --eldamo-text: var(--md-sys-color-on-surface);
+  --eldamo-text-primary: var(--md-sys-color-on-surface);
+  --eldamo-text-secondary: rgb(68 70 79);
+}
+
+/* Material 3 Dark Theme Tokens (Default) */
+:root, html.sl-theme-dark, html[data-theme="dark"] {
+  color-scheme: dark;
+  --md-sys-color-primary: rgb(176 198 255);
+  --md-sys-color-on-primary: rgb(21 46 96);
+  --md-sys-color-primary-container: rgb(46 69 120);
+  --md-sys-color-on-primary-container: rgb(217 226 255);
+  --md-sys-color-background: rgb(18 19 24);
+  --md-sys-color-on-background: rgb(226 226 233);
+  --md-sys-color-surface: rgb(18 19 24);
+  --md-sys-color-on-surface: rgb(226 226 233);
+  --md-sys-color-surface-container-low: rgb(26 27 32);
+  --md-sys-color-surface-container: rgb(30 31 37);
+  --md-sys-color-surface-container-high: rgb(40 42 47);
+  --md-sys-color-surface-container-highest: rgb(51 53 58);
+  --md-sys-color-outline: rgb(143 144 153);
+  --md-sys-color-outline-variant: rgb(68 70 79);
+
+  /* Eldamo Mapped Tokens (Dark) */
+  --eldamo-bg: var(--md-sys-color-background);
+  --eldamo-surface: var(--md-sys-color-surface-container-low);
+  --eldamo-surface-border: var(--md-sys-color-outline-variant);
+  --eldamo-primary: var(--md-sys-color-primary);
+  --eldamo-accent: var(--md-sys-color-primary);
+  --eldamo-accent-blue: var(--md-sys-color-primary);
+  --eldamo-gold: var(--md-sys-color-primary);
+  --eldamo-gold-bright: rgb(217 226 255);
+  --eldamo-gold-muted: rgb(143 144 153);
+  --eldamo-text: var(--md-sys-color-on-surface);
+  --eldamo-text-primary: var(--md-sys-color-on-surface);
+  --eldamo-text-secondary: rgb(197 198 208);
+
+  --eldamo-font-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --eldamo-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--eldamo-bg);
+  color: var(--eldamo-text-primary);
+  font-family: var(--eldamo-font-sans);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, .elvish-heading {
+  font-family: var(--eldamo-font-serif);
+  color: var(--eldamo-gold-bright);
+}
+
+@font-face {
+  font-family: "Tengwar Annatar";
+  src: url("/fonts/tengwar-annatar-glaemunicode.woff") format("woff"),
+       url("/fonts/tengwar-annatar-glaemunicode.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Tengwar Annatar";
+  src: url("/fonts/tengwar-annatar-glaemunicode-bold.woff") format("woff"),
+       url("/fonts/tengwar-annatar-glaemunicode-bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Tengwar Annatar";
+  src: url("/fonts/tengwar-annatar-glaemunicode-italic.woff") format("woff"),
+       url("/fonts/tengwar-annatar-glaemunicode-italic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Tengwar Eldamar";
+  src: url("/fonts/tengwar-eldamar-glaemunicode.woff") format("woff"),
+       url("/fonts/tengwar-eldamar-glaemunicode.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Tengwar Parmaite";
+  src: url("/fonts/tengwar-parmaite-glaemunicode.woff") format("woff"),
+       url("/fonts/tengwar-parmaite-glaemunicode.ttf") format("truetype");
+}
+
+.tengwar-text, .tengwar {
+  font-family: "Tengwar Annatar", "Tengwar Eldamar", "Tengwar Parmaite", sans-serif;
+  font-size: 1.25em;
+  line-height: 1.2;
+  color: var(--eldamo-gold-bright, #f0d193);
+}

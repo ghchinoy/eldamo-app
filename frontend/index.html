@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" class="sl-theme-dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eldamo — Elvish Lexicon & Vector Search</title>
+    <script>
+      (function() {
+        try {
+          var pref = localStorage.getItem("eldamo_theme_pref") || "auto";
+          var theme = "dark";
+          if (pref === "light") theme = "light";
+          else if (pref === "dark") theme = "dark";
+          else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) theme = "light";
+          document.documentElement.setAttribute("data-theme", theme);
+          if (theme === "light") {
+            document.documentElement.classList.remove("sl-theme-dark");
+            document.documentElement.classList.add("sl-theme-light");
+          }
+        } catch(e) {}
+      })();
+    </script>
+    <link rel="stylesheet" href="/src/styles/theme.css" />
+  </head>
+  <body>
+    <eldamo-app></eldamo-app>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

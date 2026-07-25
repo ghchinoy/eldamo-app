@@ -1,0 +1,60 @@
+digraph ComponentHierarchy {
+    graph [
+        rankdir="TB"
+        bgcolor="#0f141c"
+        fontname="Helvetica,Arial,sans-serif"
+        label="Eldamo App — Lit Web Component Architecture & Event Flow"
+        labelloc="t"
+        fontsize=18
+        fontcolor="#f0d193"
+        nodesep=0.6
+        ranksep=0.8
+    ];
+
+    node [
+        fontname="Helvetica,Arial,sans-serif"
+        fontsize=11
+        shape="box"
+        style="filled,rounded"
+        fillcolor="#18202c"
+        fontcolor="#e6edf3"
+        color="#2b3848"
+        penwidth=1.5
+    ];
+
+    edge [
+        fontname="Helvetica,Arial,sans-serif"
+        fontsize=9
+        color="#e5c07b"
+        fontcolor="#967d4f"
+        arrowsize=0.8
+    ];
+
+    // Nodes
+    app [label="<eldamo-app>\nRoot Container & State Manager\n(src/components/eldamo-app.ts)", fillcolor="#2b3848", fontcolor="#f0d193", penwidth=2.5];
+    header [label="<eldamo-header>\nSticky App Header & Navigation\n(src/components/header.ts)"];
+    search [label="<eldamo-search-bar>\nSearch Input, Language Select & Mode Toggle\n(src/components/search-bar.ts)"];
+    browse [label="<eldamo-browse-bar>\nA-Z Letter Strip & Pagination Controls\n(src/components/browse-bar.ts)"];
+    card [label="<eldamo-result-card>\nLexicon Entry Card\n(src/components/result-card.ts)"];
+    detail [label="<eldamo-entry-detail-modal>\nFull Entry, Attestations, Derivations, Cognates\n(src/components/entry-detail-modal.ts)"];
+    settings [label="<eldamo-settings-modal>\nDB Management & Gemini Key Storage\n(src/components/settings-modal.ts)"];
+
+    // Relationships & Event Flow
+    app -> header [label="passes .viewMode"];
+    header -> app [label="emits @mode-change\nemits @open-settings", style="dashed"];
+
+    app -> search [label="renders in Search mode"];
+    search -> app [label="emits @search-change", style="dashed"];
+
+    app -> browse [label="renders in Browse mode"];
+    browse -> app [label="emits @browse-change", style="dashed"];
+
+    app -> card [label="renders list of results"];
+    card -> app [label="emits @select-entry", style="dashed"];
+
+    app -> detail [label="passes .detail, .open"];
+    detail -> app [label="emits @modal-closed", style="dashed"];
+
+    app -> settings [label="passes .open, .dbStatus"];
+    settings -> app [label="emits @modal-closed", style="dashed"];
+}

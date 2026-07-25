@@ -1,0 +1,17 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "Eldamo Desktop",
+  "outputfilename": "Eldamo",
+  "frontend:dir": "frontend",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "http://localhost:1425",
+  "author": {
+    "name": "G. H. Chinoy",
+    "email": "pallando@mithlond.com"
+  },
+  "info": {
+    "productVersion": "0.1.0"
+  }
+}

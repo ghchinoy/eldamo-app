@@ -1,0 +1,616 @@
+[
+  {
+    "id": "q_sem_star",
+    "type": "english_semantic",
+    "query": "words meaning star or related concepts",
+    "concept": "star",
+    "expected_page_ids": [
+      1825557517,
+      1319998893,
+      2451608663,
+      1947197613,
+      308881645,
+      4098290317,
+      1938686765,
+      1444210031,
+      3005945183,
+      854669609
+    ]
+  },
+  {
+    "id": "q_sem_sun",
+    "type": "english_semantic",
+    "query": "words meaning sun or related concepts",
+    "concept": "sun",
+    "expected_page_ids": [
+      4256403703,
+      2475504767,
+      3912520739,
+      158433779,
+      1930217087,
+      163041861,
+      3521740537
+    ]
+  },
+  {
+    "id": "q_sem_moon",
+    "type": "english_semantic",
+    "query": "words meaning moon or related concepts",
+    "concept": "moon",
+    "expected_page_ids": [
+      2640380561,
+      535385615,
+      3088056345,
+      3177521915,
+      863158895,
+      1174467763,
+      959989465
+    ]
+  },
+  {
+    "id": "q_sem_light",
+    "type": "english_semantic",
+    "query": "words meaning light or related concepts",
+    "concept": "light",
+    "expected_page_ids": [
+      1827783683,
+      311107811,
+      1064907937,
+      588112985,
+      3100110347,
+      1357813931,
+      1517402043
+    ]
+  },
+  {
+    "id": "q_sem_darkness",
+    "type": "english_semantic",
+    "query": "words meaning darkness or related concepts",
+    "concept": "darkness",
+    "expected_page_ids": [
+      509187197,
+      3036979267,
+      3697742097,
+      2275351429,
+      1084245651,
+      2399437541,
+      632263215,
+      2364397417
+    ]
+  },
+  {
+    "id": "q_sem_water",
+    "type": "english_semantic",
+    "query": "words meaning water or related concepts",
+    "concept": "water",
+    "expected_page_ids": [
+      2737333777,
+      3981653235,
+      3446118707,
+      3687268913,
+      3041855313,
+      1837658015,
+      3790476963
+    ]
+  },
+  {
+    "id": "q_sem_tree",
+    "type": "english_semantic",
+    "query": "words meaning tree or related concepts",
+    "concept": "tree",
+    "expected_page_ids": [
+      2317160375,
+      539805327,
+      4035412823,
+      3824712185,
+      1757258825,
+      3061781529,
+      2416366879,
+      2362803045,
+      1512579309,
+      3005081253,
+      3695475717
+    ]
+  },
+  {
+    "id": "q_sem_flower",
+    "type": "english_semantic",
+    "query": "words meaning flower or related concepts",
+    "concept": "flower",
+    "expected_page_ids": [
+      2634469607,
+      2631268135,
+      233215507,
+      1114592353,
+      1130780073
+    ]
+  },
+  {
+    "id": "q_sem_mountain",
+    "type": "english_semantic",
+    "query": "words meaning mountain or related concepts",
+    "concept": "mountain",
+    "expected_page_ids": [
+      3227919339,
+      2760177883,
+      4117930823,
+      2107077031,
+      339902825,
+      1915290809
+    ]
+  },
+  {
+    "id": "q_sem_sea",
+    "type": "english_semantic",
+    "query": "words meaning sea or related concepts",
+    "concept": "sea",
+    "expected_page_ids": [
+      3259339243
+    ]
+  },
+  {
+    "id": "q_sem_friend",
+    "type": "english_semantic",
+    "query": "words meaning friend or related concepts",
+    "concept": "friend",
+    "expected_page_ids": [
+      2964964287,
+      3655358721
+    ]
+  },
+  {
+    "id": "q_sem_king",
+    "type": "english_semantic",
+    "query": "words meaning king or related concepts",
+    "concept": "king",
+    "expected_page_ids": [
+      3579827261,
+      1669828031,
+      658710813,
+      3186503813,
+      3457618943
+    ]
+  },
+  {
+    "id": "q_sem_queen",
+    "type": "english_semantic",
+    "query": "words meaning queen or related concepts",
+    "concept": "queen",
+    "expected_page_ids": [
+      771124993,
+      2612658937,
+      2283754369,
+      3367157657,
+      1599978681,
+      843915033
+    ]
+  },
+  {
+    "id": "q_sem_sword",
+    "type": "english_semantic",
+    "query": "words meaning sword or related concepts",
+    "concept": "sword",
+    "expected_page_ids": [
+      2503579977,
+      942379951,
+      3494930711,
+      2771706657
+    ]
+  },
+  {
+    "id": "q_sem_fire",
+    "type": "english_semantic",
+    "query": "words meaning fire or related concepts",
+    "concept": "fire",
+    "expected_page_ids": [
+      3001223523,
+      1234045477
+    ]
+  },
+  {
+    "id": "q_sem_love",
+    "type": "english_semantic",
+    "query": "words meaning love or related concepts",
+    "concept": "love",
+    "expected_page_ids": [
+      1450662337,
+      1022543109,
+      896287625,
+      3331909627,
+      1720437829
+    ]
+  },
+  {
+    "id": "q_sem_heart",
+    "type": "english_semantic",
+    "query": "words meaning heart or related concepts",
+    "concept": "heart",
+    "expected_page_ids": [
+      2864436961,
+      99014689,
+      745758147,
+      1449618973,
+      3136985703
+    ]
+  },
+  {
+    "id": "q_sem_speech",
+    "type": "english_semantic",
+    "query": "words meaning speech or related concepts",
+    "concept": "speech",
+    "expected_page_ids": [
+      106071007,
+      184000497,
+      2711791607,
+      2433865659
+    ]
+  },
+  {
+    "id": "q_sem_gift",
+    "type": "english_semantic",
+    "query": "words meaning gift or related concepts",
+    "concept": "gift",
+    "expected_page_ids": [
+      3547079839,
+      2771612423,
+      12724767,
+      304319019,
+      1321873265,
+      3695700555
+    ]
+  },
+  {
+    "id": "q_sem_gold",
+    "type": "english_semantic",
+    "query": "words meaning gold or related concepts",
+    "concept": "gold",
+    "expected_page_ids": [
+      1138081385
+    ]
+  },
+  {
+    "id": "q_sem_silver",
+    "type": "english_semantic",
+    "query": "words meaning silver or related concepts",
+    "concept": "silver",
+    "expected_page_ids": [
+      735999269,
+      2009654805,
+      500961157,
+      4176078247,
+      3354444923,
+      1612148507,
+      811896967,
+      890920293
+    ]
+  },
+  {
+    "id": "q_sem_stone",
+    "type": "english_semantic",
+    "query": "words meaning stone or related concepts",
+    "concept": "stone",
+    "expected_page_ids": [
+      1057523367,
+      3585312617,
+      3737848983,
+      2829047159,
+      1084088573,
+      272782063,
+      2855818015,
+      3611881663
+    ]
+  },
+  {
+    "id": "q_sem_wind",
+    "type": "english_semantic",
+    "query": "words meaning wind or related concepts",
+    "concept": "wind",
+    "expected_page_ids": [
+      3139850309,
+      1725102303,
+      16439917,
+      3467403519
+    ]
+  },
+  {
+    "id": "q_sem_bird",
+    "type": "english_semantic",
+    "query": "words meaning bird or related concepts",
+    "concept": "bird",
+    "expected_page_ids": [
+      1137358351,
+      811844039,
+      166430289
+    ]
+  },
+  {
+    "id": "q_elv_elen",
+    "type": "elvish_direct",
+    "query": "elen",
+    "expected_page_ids": [
+      1825557517,
+      1319998893,
+      2451608663,
+      1947197613,
+      308881645,
+      4098290317
+    ]
+  },
+  {
+    "id": "q_elv_anar",
+    "type": "elvish_direct",
+    "query": "anar",
+    "expected_page_ids": [
+      4256403703,
+      2475504767,
+      3912520739,
+      158433779
+    ]
+  },
+  {
+    "id": "q_elv_galad",
+    "type": "elvish_direct",
+    "query": "galad",
+    "expected_page_ids": [
+      1064907937,
+      588112985,
+      3100110347,
+      1357813931,
+      1517402043
+    ]
+  },
+  {
+    "id": "q_elv_ithil",
+    "type": "elvish_direct",
+    "query": "ithil",
+    "expected_page_ids": [
+      2640380561,
+      535385615,
+      3088056345,
+      3177521915
+    ]
+  },
+  {
+    "id": "q_elv_mellon",
+    "type": "elvish_direct",
+    "query": "mellon",
+    "expected_page_ids": [
+      2964964287,
+      3655358721
+    ]
+  },
+  {
+    "id": "q_elv_laurë",
+    "type": "elvish_direct",
+    "query": "laurë",
+    "expected_page_ids": [
+      1138081385
+    ]
+  },
+  {
+    "id": "q_elv_vanya",
+    "type": "elvish_direct",
+    "query": "vanya",
+    "expected_page_ids": [
+      1611195929,
+      1127545279,
+      3581410859,
+      2960666923
+    ]
+  },
+  {
+    "id": "q_elv_alda",
+    "type": "elvish_direct",
+    "query": "alda",
+    "expected_page_ids": [
+      2317160375,
+      539805327,
+      4035412823,
+      3824712185
+    ]
+  },
+  {
+    "id": "q_elv_lótë",
+    "type": "elvish_direct",
+    "query": "lótë",
+    "expected_page_ids": [
+      2634469607
+    ]
+  },
+  {
+    "id": "q_elv_amba",
+    "type": "elvish_direct",
+    "query": "amba",
+    "expected_page_ids": [
+      168790185,
+      2631429853,
+      2420728285,
+      2648416419
+    ]
+  },
+  {
+    "id": "q_elv_morn",
+    "type": "elvish_direct",
+    "query": "morn",
+    "expected_page_ids": [
+      509187197,
+      3036979267,
+      3697742097,
+      2275351429
+    ]
+  },
+  {
+    "id": "q_elv_silme",
+    "type": "elvish_direct",
+    "query": "silme",
+    "expected_page_ids": [
+      1278346367,
+      547673641
+    ]
+  },
+  {
+    "id": "q_elv_rocco",
+    "type": "elvish_direct",
+    "query": "rocco",
+    "expected_page_ids": [
+      2952848001
+    ]
+  },
+  {
+    "id": "q_elv_tári",
+    "type": "elvish_direct",
+    "query": "tári",
+    "expected_page_ids": [
+      771124993,
+      2612658937,
+      2283754369
+    ]
+  },
+  {
+    "id": "q_elv_aran",
+    "type": "elvish_direct",
+    "query": "aran",
+    "expected_page_ids": [
+      3579827261,
+      1669828031,
+      658710813,
+      3186503813,
+      3457618943
+    ]
+  },
+  {
+    "id": "q_elv_macil",
+    "type": "elvish_direct",
+    "query": "macil",
+    "expected_page_ids": [
+      2503579977
+    ]
+  },
+  {
+    "id": "q_elv_órë",
+    "type": "elvish_direct",
+    "query": "órë",
+    "expected_page_ids": [
+      2864436961,
+      99014689
+    ]
+  },
+  {
+    "id": "q_elv_quetta",
+    "type": "elvish_direct",
+    "query": "quetta",
+    "expected_page_ids": [
+      106071007
+    ]
+  },
+  {
+    "id": "q_elv_anna",
+    "type": "elvish_direct",
+    "query": "anna",
+    "expected_page_ids": [
+      3547079839,
+      2771612423,
+      12724767
+    ]
+  },
+  {
+    "id": "q_morph_1",
+    "type": "morphological",
+    "query": "root for light",
+    "tag": "KAL",
+    "expected_page_ids": [
+      309181
+    ]
+  },
+  {
+    "id": "q_morph_2",
+    "type": "morphological",
+    "query": "root for star",
+    "tag": "EL",
+    "expected_page_ids": [
+      1825557517,
+      1319998893,
+      2451608663,
+      1947197613,
+      308881645,
+      4098290317,
+      2964964287,
+      3655358721,
+      1450662337,
+      1022543109,
+      896287625,
+      3331909627,
+      1720437829,
+      735999269,
+      2009654805,
+      500961157,
+      4176078247,
+      3354444923,
+      1612148507,
+      811896967,
+      890920293,
+      636480389,
+      793475853,
+      933169263,
+      2627887317,
+      2947265107,
+      120608365,
+      296314007,
+      716731353,
+      1352684757,
+      1793507549,
+      1938932211,
+      2198325259,
+      2401178073,
+      3202359171,
+      1944249607,
+      236278459,
+      2361617535,
+      3587226727,
+      3552710489
+    ]
+  },
+  {
+    "id": "q_morph_3",
+    "type": "morphological",
+    "query": "root for water",
+    "tag": "NEN",
+    "expected_page_ids": [
+      2737333777,
+      3981653235,
+      3446118707,
+      3687268913,
+      3041855313,
+      1837658015,
+      3790476963
+    ]
+  },
+  {
+    "id": "q_morph_4",
+    "type": "morphological",
+    "query": "root for tree",
+    "tag": "GALAD",
+    "expected_page_ids": [
+      1064907937,
+      588112985,
+      3100110347,
+      1357813931,
+      1517402043,
+      3005081253,
+      3695475717
+    ]
+  },
+  {
+    "id": "q_morph_5",
+    "type": "morphological",
+    "query": "words for king or ruler",
+    "tag": "aran",
+    "expected_page_ids": [
+      3579827261,
+      1669828031,
+      658710813,
+      3186503813,
+      3457618943
+    ]
+  }
+]
