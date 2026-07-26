@@ -17,7 +17,7 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            asset_name: Eldamo-macOS.zip
+            asset_name: Eldamo-macOS.dmg
             build_tags: 'sqlite_fts5'
           - os: ubuntu-latest
             asset_name: Eldamo-Linux.tar.gz
@@ -38,6 +38,11 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install macOS Build Dependencies
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install create-dmg
+
       - name: Install Linux System Dependencies
         if: matrix.os == 'ubuntu-latest'
         run: |
@@ -56,11 +61,46 @@ jobs:
         run: |
           wails build -tags "${{ matrix.build_tags }}"
 
-      - name: Package macOS Application (.zip)
+      - name: Import macOS Code Signing Certificates
+        if: matrix.os == 'macos-latest'
+        uses: apple-actions/import-codesign-certs@v1
+        with:
+          p12-file-base64: ${{ secrets.APPLE_CERTIFICATE_P12_BASE64 }}
+          p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+
+      - name: Sign macOS Application Bundle
         if: matrix.os == 'macos-latest'
         run: |
-          cd build/bin
-          zip -r ../../Eldamo-macOS.zip *.app
+          codesign --deep --force --options runtime --sign "Developer ID Application: Hussain Chinoy (RXEF4MXK8Y)" "build/bin/Eldamo Desktop.app"
+
+      - name: Package macOS Application (.dmg)
+        if: matrix.os == 'macos-latest'
+        run: |
+          create-dmg \
+            --volname "Eldamo Installer" \
+            --volicon "build/appicon.png" \
+            --window-pos 200 120 \
+            --window-size 600 400 \
+            --icon-size 100 \
+            --icon "Eldamo Desktop.app" 175 120 \
+            --hide-extension "Eldamo Desktop.app" \
+            --app-drop-link 425 120 \
+            "Eldamo-macOS.dmg" \
+            "build/bin/Eldamo Desktop.app"
+
+      - name: Sign & Notarize macOS DMG
+        if: matrix.os == 'macos-latest'
+        run: |
+          codesign --force --sign "Developer ID Application: Hussain Chinoy (RXEF4MXK8Y)" Eldamo-macOS.dmg
+          echo "${{ secrets.APPLE_API_KEY_P8_BASE64 }}" | base64 --decode > AuthKey.p8
+          xcrun notarytool submit Eldamo-macOS.dmg \
+            --key AuthKey.p8 \
+            --key-id ${{ secrets.APPLE_API_KEY_ID }} \
+            --issuer ${{ secrets.APPLE_API_ISSUER_ID }} \
+            --wait
+          xcrun stapler staple Eldamo-macOS.dmg
+          rm AuthKey.p8
 
       - name: Package Linux Application (.tar.gz)
         if: matrix.os == 'ubuntu-latest'

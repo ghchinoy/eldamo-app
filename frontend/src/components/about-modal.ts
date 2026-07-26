@@ -12,7 +12,7 @@ export class AboutModal extends LitElement {
     try {
       this.version = await invokeApi<string>("get_app_version");
     } catch {
-      this.version = "0.1.0";
+      this.version = "0.1.1";
     }
   }
 
@@ -114,7 +114,7 @@ export class AboutModal extends LitElement {
           <div class="logo-container">E</div>
           <div>
             <h2 class="app-title">Eldamo Lexicon Viewer</h2>
-            <span class="version-badge">Version ${this.version || "0.1.0"}</span>
+            <span class="version-badge">Version ${this.version || "0.1.1"}</span>
           </div>
         </div>
 

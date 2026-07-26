@@ -237,7 +237,7 @@ function getMockResponse<T>(cmd: string, _args?: Record<string, unknown>): T {
     } as unknown as T;
   }
   if (cmd === "get_app_version") {
-    return "0.1.0" as unknown as T;
+    return "0.1.1" as unknown as T;
   }
   if (cmd === "get_languages") {
     return [
