@@ -133,8 +133,13 @@ Open **Settings** (via sidebar or `⌘,`):
 
 ---
 
-## 10. Offline Usage & Fallback Behavior
+## 10. Offline Usage & Gemini API Key Clarity
 
-Eldamo App works 100% locally without network access:
-- **Exact Full-Text Search**: Fully offline on-disk SQLite search. No API key needed.
-- **Vector Search Fallback**: If no Gemini API key is configured or network is offline, vector search queries automatically fall back to FTS keyword search with an informative toast notification.
+Eldamo App is designed to remain 100% functional without an internet connection or API key:
+
+- **Fully Offline Core Features**: Keyword search (FTS5 BM25), A–Z browsing, domain filters, source concordance, Glaemscribe Tengwar transliteration, and right-rail etymology inspection operate completely on-disk.
+- **Prebuilt Vector Index**: Downloading `eldamo-db.zip` installs pre-calculated 768-dim embeddings for all 35,900 entries.
+- **Optional Gemini API Key**: An API key (from Google AI Studio) is **only** required for:
+  1. Live *query-time* embedding generation during semantic vector search (falls back to exact FTS keyword search if unconfigured).
+  2. Conversational generative responses in **Lexicon Assistant** (falls back to grounded lexicon entry matches if unconfigured).
+  3. Generating fresh vector embeddings when rebuilding a custom database locally from source XML.

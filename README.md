@@ -60,12 +60,26 @@ make dev
 
 ## Key Features
 
+- **100% Offline Capable**: Exact keyword search (FTS5 BM25), A–Z browsing, domain filters, source concordance, Tengwar tools, and etymology inspection run entirely on-disk without internet or API keys.
 - **35,900+ Lexicon Entries**: Complete coverage of Quenya, Sindarin, Primitive Elvish, Adûnaic, Westron, Khuzdul, and 42 other Tolkien language varieties.
-- **Hybrid Search Engine**: Lightning-fast exact keyword search (SQLite FTS5 BM25) and semantic concept search using Gemini Embedding 2 (768-dim L2-normalized vectors).
+- **Hybrid Search Engine**: Instant exact keyword search and optional semantic concept search using 768-dim L2-normalized vector embeddings.
 - **Glaemscribe Tengwar Engine**: Live Elvish script transliteration rendered on search cards, detail views, and a dedicated **Tengwar Transliterator** tool with bundled Annatar, Eldamar, and Parmaite web fonts.
 - **Side-by-Side Etymology Panel**: Persistent right-rail inspector displaying headword details, parent root derivations, cross-language cognates, child words, and manuscript attestations (`PE17`, `Let`, `WJ`).
 - **Lexicon Assistant**: RAG-grounded AI chat interface to ask natural-language questions about Elvish grammar, etymologies, and word roots with interactive citation chips.
 - **Material 3 Neutral Blue Theme**: Clean light/dark modes with system auto-adaptation and offline local Shoelace UI components.
+
+---
+
+## Offline Usage & Gemini API Key Clarity
+
+Eldamo App works out-of-the-box **without an API key or network connection**:
+
+- **Usable 100% Offline**: All core lexicon views (Search, Browse, Domains, Concordance, Tengwar, Etymology Rail) operate locally on your machine.
+- **Prebuilt Database**: Downloading `eldamo-db.zip` on first launch installs the complete dictionary and pre-calculated vector index.
+- **When is a Gemini API Key Needed?**
+  1. **Live Query-Time Vector Search**: Generating live embeddings for concept search (if no key is set, the app gracefully falls back to exact keyword search).
+  2. **Lexicon Assistant AI Chat**: Generating conversational explanatory answers (without a key, the assistant still returns grounded lexicon entry matches).
+  3. **Local DB Rebuilds**: Generating fresh vector embeddings when compiling a database locally from raw XML.
 
 ---
 
