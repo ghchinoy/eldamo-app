@@ -133,15 +133,36 @@ Releases are automated via GitHub Actions (`.github/workflows/release.yml`).
 
 ### How to Release a New Version
 
-1. Update the version constant in `internal/app/app.go` (`const AppVersion = "0.x.x"`) and `wails.json`.
-2. Ensure all quality checks pass: `make check`.
-3. Commit changes and push a semantic version tag:
+1. **Bump version across all project files** (automatically synchronizes `app.go`, `wails.json`, `package.json`, `api.ts`, `about-modal.ts`, and `status-footer.ts`):
    ```bash
-   git tag v0.x.x
-   git push origin v0.x.x
+   make bump-version VERSION=0.1.4
    ```
-4. GitHub Actions automatically compiles native binaries on `macos-latest` (`Eldamo-macOS.dmg`, signed & notarized), `windows-latest` (`Eldamo-Windows-installer.exe`), and `ubuntu-latest` (`Eldamo-Linux.tar.gz`) and attaches them to the Release.
-5. If the database schema or embeddings updated, build the compressed database package (`zip -j eldamo-db.zip dist/eldamo.db`) and upload it to the GitHub Release via `gh release upload v0.x.x eldamo-db.zip`.
+
+2. **Verify builds**:
+   ```bash
+   make check
+   ```
+
+3. **Commit version bump & tag release**:
+   ```bash
+   git add -A
+   git commit -m "chore: bump version to v0.1.4"
+   git tag -a v0.1.4 -m "v0.1.4 release"
+   git push origin main
+   git push origin v0.1.4
+   ```
+
+4. **Automated Cross-Platform Binaries**:
+   GitHub Actions compiles, packages, and attaches native installers to the Release:
+   - 🍏 **macOS**: `Eldamo-macOS.dmg` (Developer ID signed, Apple notarized & stapled)
+   - 🪟 **Windows**: `Eldamo-Windows-installer.exe` (NSIS installer via CGO MinGW)
+   - 🐧 **Linux**: `Eldamo-Linux.tar.gz` (GTK3 / WebKit2 package)
+
+5. **Package & Upload Database (if dataset changed)**:
+   ```bash
+   make package-db-release
+   gh release upload v0.1.4 dist/eldamo-db.zip --clobber
+   ```
 
 ---
 

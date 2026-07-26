@@ -174,6 +174,9 @@ export namespace db {
 	    language_count: number;
 	    embedding_model: string;
 	    size_bytes: number;
+	    dataset_version: string;
+	    dataset_sha256: string;
+	    built_at: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new DBInfo(source);
@@ -187,6 +190,9 @@ export namespace db {
 	        this.language_count = source["language_count"];
 	        this.embedding_model = source["embedding_model"];
 	        this.size_bytes = source["size_bytes"];
+	        this.dataset_version = source["dataset_version"];
+	        this.dataset_sha256 = source["dataset_sha256"];
+	        this.built_at = source["built_at"];
 	    }
 	}
 	export class WordCognate {

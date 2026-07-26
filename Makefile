@@ -7,7 +7,7 @@ ELDAMO_DB_PATH  ?= dist/eldamo.db
 WAILS           ?= $(HOME)/go/bin/wails
 GO_TAGS         ?= -tags "sqlite_fts5"
 
-.PHONY: help fetch-xml check-dataset-update build-db-fts build-db build-db-vertex build-frontend build-app check eval dev clean
+.PHONY: help fetch-xml check-dataset-update bump-version build-db-fts build-db build-db-vertex build-frontend build-app package-db-release check eval dev clean
 
 help:
 	@echo "Eldamo App Build System"
@@ -17,18 +17,26 @@ help:
 	@echo "  ELDAMO_XML_PATH  - Path to eldamo-data.xml (Default: data/eldamo-data.xml)"
 	@echo "  ELDAMO_DB_PATH   - Output SQLite database path (Default: dist/eldamo.db)"
 	@echo "  GEMINI_API_KEY   - Google Gemini API key for generating 768-dim embeddings"
+	@echo "  VERSION          - Target version for 'make bump-version VERSION=0.x.x'"
 	@echo ""
 	@echo "Available Targets:"
+	@echo "  make bump-version         Bump version string across all project files (VERSION=0.x.x)"
 	@echo "  make fetch-xml            Download eldamo-data.xml from ELDAMO_XML_URL to ELDAMO_XML_PATH"
 	@echo "  make check-dataset-update Check pfstrack/eldamo master for dataset updates vs active database"
 	@echo "  make build-db-fts         Build SQLite database with structured dictionary & FTS5 (Go Engine)"
 	@echo "  make build-db             Build SQLite database with Gemini Embedding 2 vectors (Go Engine)"
+	@echo "  make package-db-release   Zip dist/eldamo.db into dist/eldamo-db.zip for release upload"
 	@echo "  make eval                 Run search quality benchmark against active SQLite database (Go Engine)"
 	@echo "  make build-frontend       Build Vite + Lit Web Components bundle"
 	@echo "  make build-app            Compile Wails Go desktop binary"
 	@echo "  make check                Run type-checking and Go compilation verifications"
 	@echo "  make dev                  Launch application in Wails live development mode"
 	@echo "  make clean                Clean build artifacts and temporary data"
+
+# 0. Version Bump Tool
+bump-version:
+	@if [ -z "$(VERSION)" ]; then echo "Usage: make bump-version VERSION=0.x.x"; exit 1; fi
+	@go run ./cmd/bumpversion -version $(VERSION)
 
 # 1. Download XML Dataset
 fetch-xml:
@@ -73,12 +81,20 @@ build-app: build-frontend
 	@echo "Compiling Wails Go application..."
 	@$(WAILS) build -tags "sqlite_fts5"
 
+# 6b. Package DB Release Asset
+package-db-release:
+	@if [ ! -f "$(ELDAMO_DB_PATH)" ]; then echo "Error: $(ELDAMO_DB_PATH) not found. Run make build-db first."; exit 1; fi
+	@echo "Packaging $(ELDAMO_DB_PATH) -> dist/eldamo-db.zip..."
+	@cd dist && zip -9 eldamo-db.zip eldamo.db
+	@echo "✓ Created dist/eldamo-db.zip ($$(du -h dist/eldamo-db.zip | cut -f1))"
+
 # 7. Verification / Checks
 check: build-frontend
 	@echo "Verifying Go compilation..."
 	@go build $(GO_TAGS) -o /dev/null .
 	@go build $(GO_TAGS) -o /dev/null ./cmd/builder
 	@go build $(GO_TAGS) -o /dev/null ./cmd/eval
+	@go build -o /dev/null ./cmd/bumpversion
 
 # 8. Dev Mode
 dev:
