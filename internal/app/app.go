@@ -445,15 +445,9 @@ func (a *App) StartDownloadDB(url *string) error {
 			contentLength = 100 * 1024 * 1024
 		}
 
-		cwd, err := os.Getwd()
-		if err != nil {
-			a.emitProgress("error", "Failed to resolve working directory", 0.0, false, err.Error())
-			return
-		}
-
-		distDir := filepath.Join(cwd, "dist")
-		_ = os.MkdirAll(distDir, 0755)
-		dbPath := filepath.Join(distDir, "eldamo.db")
+		dbPath := db.GetWritableDBPath()
+		dbDir := filepath.Dir(dbPath)
+		_ = os.MkdirAll(dbDir, 0755)
 
 		isZip := strings.HasSuffix(strings.ToLower(targetURL), ".zip")
 		downloadPath := dbPath + ".tmp"
@@ -573,8 +567,10 @@ func (a *App) StartDownloadDB(url *string) error {
 
 func (a *App) StartBuildLocalDB(generateVectors bool) error {
 	go func() {
-		xmlPath := filepath.Join("data", "eldamo-data.xml")
-		dbPath := filepath.Join("dist", "eldamo.db")
+		dbPath := db.GetWritableDBPath()
+		appDir := filepath.Dir(dbPath)
+		_ = os.MkdirAll(appDir, 0755)
+		xmlPath := filepath.Join(appDir, "eldamo-data.xml")
 
 		// Step 1: Ensure XML dataset exists
 		if _, err := os.Stat(xmlPath); os.IsNotExist(err) {

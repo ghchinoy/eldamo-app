@@ -141,7 +141,39 @@ func ResolveDBPath() string {
 	if _, err := os.Stat(fallback); err == nil {
 		return fallback
 	}
+
+	if configDir, err := os.UserConfigDir(); err == nil {
+		userDB := filepath.Join(configDir, "eldamo-app", "eldamo.db")
+		if _, err := os.Stat(userDB); err == nil {
+			return userDB
+		}
+	}
+
 	return ""
+}
+
+func GetWritableDBPath() string {
+	// In development / local workspace, prefer dist/eldamo.db if dist dir is writable
+	cwd, err := os.Getwd()
+	if err == nil {
+		distDir := filepath.Join(cwd, "dist")
+		if err := os.MkdirAll(distDir, 0755); err == nil {
+			testFile := filepath.Join(distDir, ".write_test")
+			if err := os.WriteFile(testFile, []byte("test"), 0644); err == nil {
+				_ = os.Remove(testFile)
+				return filepath.Join(distDir, "eldamo.db")
+			}
+		}
+	}
+
+	// In packaged desktop apps, write to user app data directory (~/Library/Application Support/eldamo-app/eldamo.db on macOS)
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		return filepath.Join(".", "eldamo.db")
+	}
+	appDir := filepath.Join(configDir, "eldamo-app")
+	_ = os.MkdirAll(appDir, 0755)
+	return filepath.Join(appDir, "eldamo.db")
 }
 
 func NewDatabase(dbPath string) (*Database, error) {

@@ -10,7 +10,7 @@ export class EldamoSettingsView extends LitElement {
   @property({ type: Number }) progressPercent = 0;
   @property({ type: String }) statusText = "";
 
-  @state() private activeTab: "appearance" | "database" | "apikey" = "appearance";
+  @property({ type: String }) activeTab: "appearance" | "database" | "apikey" = "appearance";
   @state() private themePref: ThemePreference = "auto";
   @state() private apiKey = "";
   @state() private geminiModel = "gemini-3.5-flash-lite";
@@ -220,13 +220,15 @@ export class EldamoSettingsView extends LitElement {
                   <h3 class="card-title">Active Database Status</h3>
                   <div class="card-desc">${this.dbStatus}</div>
 
-                  ${this.inProgress
+                  ${this.inProgress || this.statusText
                     ? html`
                         <div style="margin-top: 1rem;">
-                          <div style="font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--eldamo-gold-bright);">
+                          <div style="font-size: 0.88rem; margin-bottom: 0.5rem; color: var(--eldamo-gold-bright); font-weight: 500;">
                             ${this.statusText || "Processing..."}
                           </div>
-                          <sl-progress-bar value=${this.progressPercent}></sl-progress-bar>
+                          ${this.inProgress
+                            ? html`<sl-progress-bar value=${this.progressPercent}></sl-progress-bar>`
+                            : ""}
                         </div>
                       `
                     : ""}

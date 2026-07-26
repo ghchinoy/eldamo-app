@@ -24,6 +24,7 @@ import { FullEntryDetail } from "./entry-detail-modal";
 @customElement("eldamo-app")
 export class EldamoApp extends LitElement {
   @state() private viewMode: "search" | "browse" | "domain" | "concordance" | "transliterator" | "chat" | "settings" = "search";
+  @state() private settingsTab: "appearance" | "database" | "apikey" = "appearance";
   @state() private sidebarCollapsed = false;
 
   // Search state
@@ -148,6 +149,27 @@ export class EldamoApp extends LitElement {
       margin-bottom: 1.5rem;
     }
 
+    sl-alert.db-alert::part(base) {
+      background-color: var(--md-sys-color-surface-container-high, #242634);
+      border: 1px solid #EAB308;
+      color: var(--eldamo-text-primary);
+      border-radius: 10px;
+    }
+
+    sl-alert.db-alert::part(icon) {
+      color: #FACC15;
+    }
+
+    sl-alert.db-alert strong {
+      color: #FACC15;
+    }
+
+    sl-alert.db-alert sl-button {
+      color: var(--eldamo-gold-bright) !important;
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
     .results-grid {
       display: flex;
       flex-direction: column;
@@ -185,7 +207,13 @@ export class EldamoApp extends LitElement {
       this.progressPercent = evt.percent;
       this.progressStatusText = evt.status_text;
 
+      if (evt.stage === "error") {
+        const msg = evt.error ? `${evt.status_text}: ${evt.error}` : evt.status_text;
+        this.showToast("error", msg);
+      }
+
       if (evt.completed) {
+        this.showToast("info", "Database successfully installed!");
         this.fetchDBInfo();
         this.loadLanguages();
         this.executeSearch(this.currentQuery, "", "fts");
@@ -535,7 +563,7 @@ export class EldamoApp extends LitElement {
               <sl-icon slot="icon" name="exclamation-triangle"></sl-icon>
               <strong>Eldamo Database Not Found</strong><br />
               The application requires a database file to search entries. Click
-              <sl-button variant="text" size="small" @click=${() => (this.viewMode = "settings")}>Settings & DB</sl-button>
+              <sl-button variant="text" size="small" @click=${() => { this.viewMode = "settings"; this.settingsTab = "database"; }}>Settings & DB</sl-button>
               to download the pre-built vector database (~150MB) or build from local XML.
             </sl-alert>
           `
@@ -619,6 +647,7 @@ export class EldamoApp extends LitElement {
         ${this.viewMode === "settings"
           ? html`
               <eldamo-settings-view
+                .activeTab=${this.settingsTab}
                 .dbStatus=${this.dbMissing
                   ? "No database loaded"
                   : `${this.dbInfo.path || "dist/eldamo.db"} loaded (${this.dbInfo.word_count.toLocaleString()} entries)`}
@@ -670,7 +699,7 @@ export class EldamoApp extends LitElement {
         .dbExists=${this.dbInfo.exists}
         .dbPath=${this.dbInfo.path}
         .wordCount=${this.dbInfo.word_count}
-        @open-downloader=${() => (this.viewMode = "settings")}
+        @open-downloader=${() => { this.viewMode = "settings"; this.settingsTab = "database"; }}
         @modal-closed=${() => (this.welcomeOpen = false)}
       ></eldamo-welcome-modal>
     `;
