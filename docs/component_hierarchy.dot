@@ -1,60 +1,77 @@
 digraph ComponentHierarchy {
     graph [
         rankdir="TB"
-        bgcolor="#0f141c"
+        bgcolor="#121318"
         fontname="Helvetica,Arial,sans-serif"
-        label="Eldamo App — Lit Web Component Architecture & Event Flow"
+        label="Eldamo App — Lit Component Architecture & Event Flow"
         labelloc="t"
         fontsize=18
-        fontcolor="#f0d193"
-        nodesep=0.6
-        ranksep=0.8
+        fontcolor="#b0c6ff"
+        nodesep=0.5
+        ranksep=0.7
     ];
 
     node [
         fontname="Helvetica,Arial,sans-serif"
-        fontsize=11
+        fontsize=10
         shape="box"
         style="filled,rounded"
-        fillcolor="#18202c"
-        fontcolor="#e6edf3"
-        color="#2b3848"
+        fillcolor="#1e1f25"
+        fontcolor="#e2e2e9"
+        color="#44464f"
         penwidth=1.5
     ];
 
     edge [
         fontname="Helvetica,Arial,sans-serif"
-        fontsize=9
-        color="#e5c07b"
-        fontcolor="#967d4f"
+        fontsize=8
+        color="#8f9099"
+        fontcolor="#c5c6d0"
         arrowsize=0.8
     ];
 
     // Nodes
-    app [label="<eldamo-app>\nRoot Container & State Manager\n(src/components/eldamo-app.ts)", fillcolor="#2b3848", fontcolor="#f0d193", penwidth=2.5];
-    header [label="<eldamo-header>\nSticky App Header & Navigation\n(src/components/header.ts)"];
-    search [label="<eldamo-search-bar>\nSearch Input, Language Select & Mode Toggle\n(src/components/search-bar.ts)"];
-    browse [label="<eldamo-browse-bar>\nA-Z Letter Strip & Pagination Controls\n(src/components/browse-bar.ts)"];
-    card [label="<eldamo-result-card>\nLexicon Entry Card\n(src/components/result-card.ts)"];
-    detail [label="<eldamo-entry-detail-modal>\nFull Entry, Attestations, Derivations, Cognates\n(src/components/entry-detail-modal.ts)"];
-    settings [label="<eldamo-settings-modal>\nDB Management & Gemini Key Storage\n(src/components/settings-modal.ts)"];
+    app [label="<eldamo-app>\nRoot Container & Grid Shell\n(src/components/eldamo-app.ts)", fillcolor="#2b3848", fontcolor="#b0c6ff", penwidth=2.5];
+    sidebar [label="<eldamo-sidebar>\nLeft Nav, History & Pins\n(src/components/sidebar.ts)"];
+    header [label="<eldamo-header>\nTop View Header & Toggle\n(src/components/header.ts)"];
+    rail [label="<eldamo-right-rail>\nInspector, Etymology & Attestations\n(src/components/right-rail.ts)"];
+    search [label="<eldamo-search-bar>\nFTS/Vector Search\n(src/components/search-bar.ts)"];
+    browse [label="<eldamo-browse-bar>\nA-Z Alphabetical\n(src/components/browse-bar.ts)"];
+    domain [label="<eldamo-domain-bar>\nSemantic Domains\n(src/components/domain-bar.ts)"];
+    concordance [label="<eldamo-concordance-bar>\nSource Citations\n(src/components/concordance-bar.ts)"];
+    tengwar [label="<eldamo-transliterator-bar>\nScript Transliterator\n(src/components/transliterator-bar.ts)"];
+    chat [label="<eldamo-chat-bar>\nLexicon Assistant RAG\n(src/components/chat-bar.ts)"];
+    settings [label="<eldamo-settings-view>\nFull-Page Settings Surface\n(src/components/settings-view.ts)"];
+    card [label="<eldamo-result-card>\nEntry Card + Tengwar\n(src/components/result-card.ts)"];
 
     // Relationships & Event Flow
-    app -> header [label="passes .viewMode"];
-    header -> app [label="emits @mode-change\nemits @open-settings", style="dashed"];
+    app -> sidebar [label="passes .viewMode"];
+    sidebar -> app [label="emits @mode-change\nemits @select-entry", style="dashed"];
 
-    app -> search [label="renders in Search mode"];
+    app -> header [label="passes .viewTitle"];
+    header -> app [label="emits @toggle-sidebar", style="dashed"];
+
+    app -> search [label="Search view"];
     search -> app [label="emits @search-change", style="dashed"];
 
-    app -> browse [label="renders in Browse mode"];
+    app -> browse [label="Browse view"];
     browse -> app [label="emits @browse-change", style="dashed"];
 
-    app -> card [label="renders list of results"];
+    app -> domain [label="Domain view"];
+    domain -> app [label="emits @domain-change", style="dashed"];
+
+    app -> concordance [label="Concordance view"];
+    concordance -> app [label="emits @concordance-change", style="dashed"];
+
+    app -> tengwar [label="Tengwar view"];
+    app -> chat [label="Chat view"];
+    chat -> app [label="emits @select-entry", style="dashed"];
+
+    app -> settings [label="Settings view"];
+
+    app -> card [label="renders results"];
     card -> app [label="emits @select-entry", style="dashed"];
 
-    app -> detail [label="passes .detail, .open"];
-    detail -> app [label="emits @modal-closed", style="dashed"];
-
-    app -> settings [label="passes .open, .dbStatus"];
-    settings -> app [label="emits @modal-closed", style="dashed"];
+    app -> rail [label="passes .detail, .open"];
+    rail -> app [label="emits @select-entry\nemits @close-rail", style="dashed"];
 }

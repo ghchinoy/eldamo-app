@@ -1,146 +1,112 @@
 # Eldamo App
 
-Eldamo App is a cross-platform desktop lexicon viewer and multilingual vector search engine for J.R.R. Tolkien's constructed languages, built with Go (Wails v2), Lit Web Components, SQLite (`sqlite-vec`), and Gemini Embedding 2.
+A cross-platform desktop dictionary and semantic concept search engine for J.R.R. Tolkien's constructed Elvish languages and Mannish tongues.
 
-Credit: Checklist and structure based on Mark Allen's ["How to Write a Great README for Your Public GitHub Project"](https://www.markcallen.com/how-to-write-a-great-readme-for-your-public-github-project/).
+![Eldamo Desktop App Screenshot](docs/assets/app_main.webp)
+
+> *Credit: README structure based on Mark Allen's ["How to Write a Great README for Your Public GitHub Project"](https://www.markcallen.com/how-to-write-a-great-readme-for-your-public-github-project/).*
+
+---
 
 ## Table of Contents
 
-- [Features](#features)
-- [Architecture & Search Mechanics](#architecture--search-mechanics)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Development Setup](#development-setup)
-- [Database Pipeline & Makefile Commands](#database-pipeline--makefile-commands)
+- [Quick Start & Installation](#quick-start--installation)
+- [Key Features](#key-features)
+- [Search & Transliteration Examples](#search--transliteration-examples)
+- [Documentation](#documentation)
 - [Contributing](#contributing)
-- [License](#license)
+- [Credits & License](#credits--license)
 
-## Features
+---
 
-- **Hybrid Search Engine**: Supports both exact Full-Text Search (FTS5) and semantic vector search using Gemini Embedding 2 (768-dim) or FastEmbed (`paraphrase-multilingual-mpnet-base-v2`).
-- **35,900+ Word Entries**: Complete coverage of Quenya, Sindarin, Primitive Elvish, Adûnaic, and 44 other Tolkien language varieties.
-- **Rich Linguistic Metadata**: Browse source attestations (`PE17`, `Let`, `WJ`), etymological derivations, and cross-language cognates.
-- **Relevance Confidence & Similarity Thresholds**: Cosine similarity score badges and interactive filtering controls for vector search results.
-- **Lightweight Distribution**: App binary ships without the database; users can download the pre-built 768-dim vector database (~150MB) on first launch or build locally from XML.
-- **Offline Capable**: Full-text search and offline FastEmbed vector search work 100% locally without network access or API keys.
+## Quick Start & Installation
 
-## Architecture & Search Mechanics
+### Option 1: Download Desktop Binary (Recommended)
 
-```
-                   ┌──────────────────────────────────────────────┐
-                   │ eldamo-data.xml (35,900 words, 30MB)         │
-                   └──────────────────────┬───────────────────────┘
-                                          │
-                               go run ./cmd/builder
-                                          │
-                                          ▼
-                   ┌──────────────────────────────────────────────┐
-                   │ dist/eldamo.db (SQLite + FTS5 + sqlite-vec)  │
-                   └──────────────────────┬───────────────────────┘
-                                          │
-                   ┌──────────────────────┴───────────────────────┐
-                   │             Wails v2 (Go) Backend            │
-                   │  mattn/go-sqlite3 + sqlite-vec CGO bindings  │
-                   └──────────────────────┬───────────────────────┘
-                                          │ IPC (Go struct bindings)
-                   ┌──────────────────────┴───────────────────────┐
-                   │           Vite + Lit Web Components          │
-                   │  Shoelace / Web Awesome Dark Parchment Theme │
-                   └──────────────────────────────────────────────┘
-```
-
-The database co-locates structured dictionary records, an FTS5 full-text index, and `sqlite-vec` `vec0` virtual tables inside a single portable SQLite file (`eldamo.db`).
-
-The application backend uses **Wails v2** (specifically v2.13.0) to bind Go methods to TypeScript frontend handlers.
-
-## Installation
-
-Download the latest release for macOS, Linux, or Windows from GitHub Releases.
+Download the latest pre-compiled release for **macOS** or **Linux** from [GitHub Releases](https://github.com/ghchinoy/eldamo-app/releases/latest).
 
 ```bash
-# Extract and launch Eldamo App
+# macOS: Extract and launch Eldamo App
+unzip Eldamo-macOS.zip
+open Eldamo.app
+
+# Linux: Extract and run
+tar -xzvf Eldamo-Linux.tar.gz
 ./Eldamo
 ```
 
-On first launch, open **Settings & DB** to download the pre-built 768-dim database or point the app to a local `eldamo-data.xml` file to build the database from scratch.
+*On first launch, open **Settings** (`⌘,`) to download the prebuilt 768-dimensional vector database (`eldamo-db.zip`, ~113MB).*
 
-## Usage
+---
 
-### Searching the Lexicon
-
-1. **Exact / FTS Search**: Type English glosses or Elvish word forms (e.g., `star`, `elen`, `calë`, `water`). FTS5 BM25 matches word forms, glosses, and notes instantly.
-2. **Semantic Vector Search**: Select **Semantic Vector Search** mode to find entries by conceptual meaning (e.g., querying *"words meaning radiance or morning light"* returns `calë`, `glær`, `galad`, and `anar`).
-3. **Similarity Threshold**: Fine-tune minimum match similarity (50% – 85%) to eliminate lower-confidence results.
-4. **Filter by Language**: Narrow queries to Quenya (`q`), Sindarin (`s`), Primitive Elvish (`p`), or Adûnaic (`ad`).
-
-### Optional Gemini API Key Setup
-
-To execute live query-time vector search with Gemini Embedding 2:
-1. Obtain an API key from Google AI Studio.
-2. Open **Settings & DB** in Eldamo App.
-3. Enter your API key and click **Save & Close**.
-
-*(Note: Exact FTS5 search and offline FastEmbed vector search require no API key).*
-
-## Development Setup
-
-### Prerequisites
-
-- **Go toolchain** (1.22+): `go version`
-- **Wails v2 CLI** (`v2.13.0`): `go install github.com/wailsapp/wails/v2/cmd/wails@latest`
-- **Node.js** (v18+ or v20+): `node --version`
-
-### Quickstart with Makefile
+### Option 2: Build From Source
 
 ```bash
 # 1. Clone repository
 git clone https://github.com/ghchinoy/eldamo-app.git
 cd eldamo-app
 
-# 2. Install frontend dependencies
-npm install
-
-# 3. Fetch XML dataset & build FTS database
+# 2. Install dependencies & build FTS database
+npm install --prefix frontend
 make build-db-fts
 
-# 4. Verify Go compilation
-make check
-
-# 5. Launch application in Wails dev mode
+# 3. Launch application in dev mode
 make dev
 ```
 
-## Database Pipeline & Makefile Commands
+*(See the [Developer Guide](docs/DEVELOPER_GUIDE.md) for full prerequisite versions and build pipeline details).*
 
-The build system includes a `Makefile` supporting custom XML dataset locations via the `ELDAMO_XML_PATH` environment variable.
+---
 
-```bash
-# Download XML from upstream repository (defaults to data/eldamo-data.xml)
-make fetch-xml
+## Key Features
 
-# Build structured + FTS5 database (fast, offline, no API key required)
-make build-db-fts
+- **35,900+ Lexicon Entries**: Complete coverage of Quenya, Sindarin, Primitive Elvish, Adûnaic, Westron, Khuzdul, and 42 other Tolkien language varieties.
+- **Hybrid Search Engine**: Lightning-fast exact keyword search (SQLite FTS5 BM25) and semantic concept search using Gemini Embedding 2 (768-dim L2-normalized vectors).
+- **Glaemscribe Tengwar Engine**: Live Elvish script transliteration rendered on search cards, detail views, and a dedicated **Tengwar Transliterator** tool with bundled Annatar, Eldamar, and Parmaite web fonts.
+- **Side-by-Side Etymology Panel**: Persistent right-rail inspector displaying headword details, parent root derivations, cross-language cognates, child words, and manuscript attestations (`PE17`, `Let`, `WJ`).
+- **Lexicon Assistant**: RAG-grounded AI chat interface to ask natural-language questions about Elvish grammar, etymologies, and word roots with interactive citation chips.
+- **Material 3 Neutral Blue Theme**: Clean light/dark modes with system auto-adaptation and offline local Shoelace UI components.
 
-# Build full 768-dim vector database using Gemini Embedding 2
-export GEMINI_API_KEY="your-api-key"
-make build-db
+---
 
-# Run search quality benchmark suite (MRR, Recall@5, Recall@10)
-make eval
+## Search & Transliteration Examples
 
-# Compile production Wails desktop application bundle
-make build-app
-```
+### Full-Text & Concept Search
+- `star` / `elen` / `calë` → Exact keyword lookups across forms and English glosses.
+- *"words related to radiance or morning light"* → Semantic concept query retrieving `calë` (light), `glær` (gleam), `galad` (radiance), and `anar` (sun).
 
-For embedding model benchmarking details, inspect `spike/SPIKE_REPORT.md` which documents comparative evaluations between Local FastEmbed (`paraphrase-multilingual-mpnet-base-v2`) and Cloud Gemini Embedding 2.
+### Live Tengwar Transliteration
+| Language | Input Phrase | Mode | Output |
+|---|---|---|---|
+| **Quenya** | `namárië` | Quenya Classical | `5#t~C7T`V` |
+| **Sindarin** | `A Elbereth` | Sindarin General Use | ` ` |
+| **Black Speech** | `ash nazg durbatulûk` | Black Speech | ` 5 7` |
+
+---
+
+## Documentation
+
+Comprehensive documentation is available in the `docs/` directory:
+
+| Guide | Description |
+|---|---|
+| 📖 **[User Guide](docs/USER_GUIDE.md)** | Complete walkthrough of search modes, language taxonomy, Right Rail etymology inspection, Tengwar tools, and settings. |
+| 🛠️ **[Developer Guide](docs/DEVELOPER_GUIDE.md)** | Architecture overview, Lit Web Component hierarchy, Makefile commands, Vertex AI ADC database generation, and release workflows. |
+
+---
 
 ## Contributing
 
-Contributions are welcome! Please follow these guidelines:
-1. Check open issues in `bd ready` (`bd` issue tracker) before submitting major changes.
-2. Ensure `make check` passes cleanly before submitting PRs.
-3. Update unit tests and pipeline scripts as appropriate.
+Contributions are welcome! Whether fixing bugs, adding linguistic dataset features, or refining UI components:
 
-## License
+1. Read the **[Developer Guide](docs/DEVELOPER_GUIDE.md)** for setup and architecture details.
+2. Check open tasks in `bd ready` (`bd` issue tracker) before starting major work.
+3. Ensure `make check` passes cleanly before opening a pull request.
 
-MIT License. See [LICENSE](LICENSE) for full details. Eldamo language data is compiled by Paul Strack under the Eldamo project license.
+---
+
+## Credits & License
+
+- **Eldamo Dataset**: Compiled and maintained by **Paul Strack** at [Eldamo.org](https://eldamo.org).
+- **Glaemscribe Engine**: Created by **Benjamin Babut** ([Talagan](https://github.com/BenTalagan/glaemscribe)) under the AGPLv3 license.
+- **Code License**: Eldamo App source code is licensed under the **[MIT License](LICENSE)**.

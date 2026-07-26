@@ -7,17 +7,15 @@ Welcome to **Eldamo App**, a modern desktop lexicon application and concept sear
 ## Table of Contents
 
 1. [Overview & Core Features](#1-overview--core-features)
-2. [First-Time Setup & Database Acquisition](#2-first-time-setup--database-acquisition)
-   - [Option A: Download Pre-built Database (Recommended)](#option-a-download-pre-built-database-recommended)
-   - [Option B: Build Database Locally from XML](#option-b-build-database-locally-from-xml)
-3. [Search Modes & Retrieval Strategy](#3-search-modes--retrieval-strategy)
-   - [Exact Full-Text Search (FTS5)](#exact-full-text-search-fts5)
-   - [Semantic Vector Search (Gemini Embedding 2)](#semantic-vector-search-gemini-embedding-2)
-4. [Language Taxonomy & Filtering](#4-language-taxonomy--filtering)
-5. [Exploring Word Entries & Etymologies](#5-exploring-word-entries--etymologies)
-6. [Settings & Gemini API Key Configuration](#6-settings--gemini-api-key-configuration)
-7. [Offline Usage & Fallback Modes](#7-offline-usage--fallback-modes)
-8. [Advanced: Custom XML Source & Rebuilding Database](#8-advanced-custom-xml-source--rebuilding-database)
+2. [Application Shell & Navigation](#2-application-shell--navigation)
+3. [First-Time Setup & Database Acquisition](#3-first-time-setup--database-acquisition)
+4. [Search Modes & Retrieval Strategy](#4-search-modes--retrieval-strategy)
+5. [Language Taxonomy & Filtering](#5-language-taxonomy--filtering)
+6. [Exploring Word Entries & Etymologies (Right Rail)](#6-exploring-word-entries--etymologies-right-rail)
+7. [Tengwar Transliterator Tool](#7-tengwar-transliterator-tool)
+8. [Lexicon Assistant (RAG Chat)](#8-lexicon-assistant-rag-chat)
+9. [Settings, Appearance & Gemini API Key](#9-settings-appearance--gemini-api-key)
+10. [Offline Usage & Fallback Behavior](#10-offline-usage--fallback-behavior)
 
 ---
 
@@ -26,40 +24,43 @@ Welcome to **Eldamo App**, a modern desktop lexicon application and concept sear
 Eldamo App provides access to Paul Strack's **Eldamo dataset** — containing over **35,900 lexical entries, 90,800 source attestations, 18,500 derivation chains, and 6,500 cross-language cognates**.
 
 Key capabilities:
-- **Instant Keyword Lookup**: Lightning-fast full-text search across all word forms, English glosses, and notes.
+- **Instant Keyword Lookup**: Lightning-fast full-text search (FTS5) across all word forms, English glosses, and notes.
 - **Multilingual Concept Search**: Search by intent or meaning using Gemini Embedding 2 vectors (768-dimensional L2-normalized embeddings).
-- **Linguistic Precision**: Complete bibliographic citations mapped down to Parma Eldalamberon volumes, Letters, and War of the Jewels page/line references.
-- **Privacy & Portability**: Single-file SQLite database with in-process vector similarity search powered by `sqlite-vec`.
+- **Live Tengwar Rendering**: Automatic Elvish script transliteration on search cards and entry details using Glaemscribe and bundled web fonts (Annatar, Eldamar, Parmaite).
+- **Side-by-Side Etymology Panel**: Inspect word forms, derivations, cognates, child words, and citations in a persistent right rail without losing your search context.
+- **Lexicon Assistant**: RAG-grounded AI chat interface to ask questions about Elvish grammar, etymologies, and word roots.
+- **Material 3 Neutral Blue Theme**: Clean light and dark modes with system auto-adaptation.
 
 ---
 
-## 2. First-Time Setup & Database Acquisition
+## 2. Application Shell & Navigation
 
-To keep the application download tiny (~10MB), Eldamo App ships without the 150MB database pre-packaged. On first launch, a setup prompt guides you through database setup.
+Eldamo App uses an OpenWorker-inspired CSS Grid layout shell:
 
-### Option A: Download Pre-built Database (Recommended)
-
-1. Launch **Eldamo App**.
-2. Click **Settings & DB** in the top-right header (or respond to the first-launch banner).
-3. Click **Download Pre-built DB (768-dim Gemini)**.
-4. The app streams `eldamo.db` (~150MB) directly into your local app data folder and initializes the search index automatically.
-
-### Option B: Build Database Locally from XML
-
-If you prefer to generate your database locally from raw XML:
-
-1. Download `eldamo-data.xml` using `make fetch-xml` or obtain it from the upstream [Eldamo repository](https://github.com/pfstrack/eldamo).
-2. In **Settings & DB**, click **Rebuild from Local XML**.
-3. Select your `eldamo-data.xml` path. The build script parses all 35,900 entries, constructs FTS5 indices, and embeds all documents.
+- **Left Sidebar**:
+  - Switch surfaces: **Search**, **Browse A–Z**, **Domains**, **Concordance**, **Tengwar**, **Lexicon Assistant**, and **Settings**.
+  - **Recent Entries**: Automatically tracks the last 15 words you inspected.
+  - **Pinned Entries**: Pin favorite entries to the sidebar for instant access across sessions.
+  - **Collapsible**: Click the sidebar icon or press `⌘B` (or `Ctrl+B`) to collapse the sidebar offscreen for max workspace width.
+- **Main Workspace**: Scrollable content area with a slim topbar displaying current surface title.
+- **Right Rail**: Slide-out inspector drawer for entry details and etymology relations.
 
 ---
 
-## 3. Search Modes & Retrieval Strategy
+## 3. First-Time Setup & Database Acquisition
 
-Eldamo App features two complementary search modes accessible via the search bar toggle.
+Eldamo App ships as a lightweight binary (~10MB). On first launch, a setup banner guides you through database setup.
+
+1. Open **Settings** (via sidebar or `⌘,`).
+2. Select the **Database** tab.
+3. Click **Start Download** to download the pre-built 768-dim database package (`eldamo-db.zip`, ~113MB). The app automatically extracts and initializes the search index.
+4. Alternatively, click **Build Local DB** to generate the database directly from an upstream `eldamo-data.xml` file.
+
+---
+
+## 4. Search Modes & Retrieval Strategy
 
 ### Exact Full-Text Search (FTS5)
-
 - **Best for**: Direct word lookups, exact glosses, or specific grammatical terms.
 - **Examples**:
   - `elen` → Returns Quenya *elen* ("star").
@@ -68,8 +69,7 @@ Eldamo App features two complementary search modes accessible via the search bar
 - **Features**: Supports prefix matching (`star*`), wildcard expressions, and exact phrase quotes (`"bright star"`).
 
 ### Semantic Vector Search (Gemini Embedding 2)
-
-- **Best for**: Conceptual queries, indirect meanings, or multi-word descriptive searches where exact English glosses might not match directly.
+- **Best for**: Conceptual queries, indirect meanings, or multi-word descriptive searches.
 - **Examples**:
   - *"words related to radiance or morning light"* → Retrieves `calë` (light), `glær` (gleam), `galad` (radiance), `anar` (sun).
   - *"terms for ocean waves or sea foam"* → Retrieves `eär` (sea), `gaear` (ocean), `falma` (crest/wave), `Elroth` (star-foam).
@@ -77,7 +77,7 @@ Eldamo App features two complementary search modes accessible via the search bar
 
 ---
 
-## 4. Language Taxonomy & Filtering
+## 5. Language Taxonomy & Filtering
 
 Eldamo covers **48 distinct language definitions** organized into 4 conceptual eras:
 
@@ -88,60 +88,53 @@ Eldamo covers **48 distinct language definitions** organized into 4 conceptual e
 | **Middle Period (1930–1950)** | Middle Quenya (`mq`), Noldorin (`n`), Ilkorin (`ilk`), Danian (`dan`) |
 | **Early Period (1910–1930)** | Early Quenya (`eq`), Gnomish (`g`), Early Noldorin (`en`) |
 
-Use the **All Languages** dropdown selector next to the search bar to filter results strictly to a target tongue.
+Use the language filter dropdown in Search or Browse modes to restrict results to a specific tongue.
 
 ---
 
-## 5. Exploring Word Entries & Etymologies
+## 6. Exploring Word Entries & Etymologies (Right Rail)
 
-Clicking any word card opens the **Word Entry Detail Dialog**:
+Clicking any entry card opens the **Right Rail Inspector**:
 
-- **Header Badges**: Displays word form `v`, reliability mark (`†` = archaic, `*` = reconstructed, `!` = neologism), language code, and part of speech (`n`, `vb`, `adj`, `root`).
+- **Headword & Live Tengwar**: Displays word form, reliability mark (`†` = archaic, `*` = reconstructed, `!` = neologism), language badge, and live Glaemscribe Tengwar rendering.
 - **Gloss / Translation**: English translation.
-- **Source Attestations**: Citations showing where the form appears in Tolkien's manuscripts (e.g. `[PE17/067.0105] elen — star`).
-- **Etymological Derivations**: Traces the word back to its Primitive Elvish root (e.g. Quenya *elen* derived from root `EL`).
+- **Etymology & Notes**: Linguistic commentary with clickable cross-references.
+- **Etymological Derivations**: Traces parent roots (e.g. Quenya *elen* derived from root `EL`).
 - **Cross-Language Cognates**: Displays equivalent forms in sibling tongues (e.g. Quenya *elen* ↔ Sindarin *êl*).
-- **Linguistic Notes**: Full notes formatted with internal hyperlinks to related entries.
+- **Derived Words / Children**: Lists child words descending from this entry.
+- **Source Attestations**: Citations showing where the form appears in Tolkien's manuscripts (e.g. `[PE17/067.0105] elen — star`).
 
 ---
 
-## 6. Settings & Gemini API Key Configuration
+## 7. Tengwar Transliterator Tool
 
-To enable live query-time vector search using Google's Gemini Embedding 2 model:
-
-1. Obtain a free or pay-as-you-go API key from [Google AI Studio](https://aistudio.google.com/).
-2. In Eldamo App, click **Settings & DB** in the top right.
-3. Paste your API key in the **Gemini API Key** field.
-4. Click **Save & Close**. Your key is securely stored in your user configuration directory (`~/.config/eldamo-app/gemini.key` on macOS/Linux).
-
----
-
-## 7. Offline Usage & Fallback Modes
-
-Eldamo App is designed to remain fully functional without internet access:
-
-- **Exact Full-Text Search**: Operates 100% locally on disk. No network calls or API keys required.
-- **Offline FastEmbed Vector Search**: If no API key is provided or network is unavailable, the application seamlessly falls back to local FastEmbed (`paraphrase-multilingual-mpnet-base-v2`) in the Rust backend for offline vector search.
+Select **Tengwar** from the sidebar to open the free-text transliterator:
+- **Modes**: Quenya Classical, Sindarin General Use, Sindarin Beleriand, Adûnaic, Westron, Black Speech, and English.
+- **Fonts / Charsets**: Tengwar Annatar, Tengwar Eldamar, Tengwar Parmaite, and Tengwar Sindarin (using Glaemunicode PUA encoding).
+- **Presets**: One-click sample phrases ("Elen síla...", "A Elbereth...", "Ash nazg...").
+- **Copy Output**: One-click copy of the transcribed sequence to clipboard.
 
 ---
 
-## 8. Advanced: Custom XML Source & Rebuilding Database
+## 8. Lexicon Assistant (RAG Chat)
 
-To fetch a new upstream version of `eldamo-data.xml` or build from a specific local XML file:
+Select **Lexicon Assistant** from the sidebar to interact with the grounded AI assistant:
+- Ask questions like *"What are the different Quenya words for ocean?"* or *"Explain the etymology of Gilthoniel"*.
+- The assistant performs a RAG vector search across the Eldamo corpus, grounds the response in authentic dataset entries, and renders clickable citation chips that open directly in the Right Rail.
 
-1. **Fetch upstream dataset**:
-   ```bash
-   make fetch-xml
-   ```
-   *Downloads `eldamo-data.xml` to `data/eldamo-data.xml` (configurable via `ELDAMO_XML_URL` or `ELDAMO_XML_PATH`).*
+---
 
-2. **Build database with custom XML location**:
-   ```bash
-   ELDAMO_XML_PATH="/path/to/custom/eldamo-data.xml" make build-db-fts
-   ```
+## 9. Settings, Appearance & Gemini API Key
 
-3. **Rebuild full 768-dim Gemini vector database**:
-   ```bash
-   export GEMINI_API_KEY="your-api-key"
-   ELDAMO_XML_PATH="data/eldamo-data.xml" make build-db
-   ```
+Open **Settings** (via sidebar or `⌘,`):
+- **Appearance**: Toggle between **System Auto**, **Light**, and **Dark** themes.
+- **Database**: Check database status, download prebuilt packages, or rebuild locally from XML.
+- **Gemini API Key**: Enter your Google AI Studio key to enable live semantic vector search and AI responses in Lexicon Assistant. Stored at `~/Library/Application Support/eldamo-app/gemini.key` on macOS or `~/.config/eldamo-app/gemini.key` on Linux.
+
+---
+
+## 10. Offline Usage & Fallback Behavior
+
+Eldamo App works 100% locally without network access:
+- **Exact Full-Text Search**: Fully offline on-disk SQLite search. No API key needed.
+- **Vector Search Fallback**: If no Gemini API key is configured or network is offline, vector search queries automatically fall back to FTS keyword search with an informative toast notification.
