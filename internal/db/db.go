@@ -104,6 +104,9 @@ type DBInfo struct {
 	LanguageCount  int    `json:"language_count"`
 	EmbeddingModel string `json:"embedding_model"`
 	SizeBytes      int64  `json:"size_bytes"`
+	DatasetVersion string `json:"dataset_version"`
+	DatasetSHA256  string `json:"dataset_sha256"`
+	BuiltAt        string `json:"built_at"`
 }
 
 func (d *Database) GetInfo() DBInfo {
@@ -117,6 +120,9 @@ func (d *Database) GetInfo() DBInfo {
 	_ = d.db.QueryRow("SELECT COUNT(*) FROM words").Scan(&info.WordCount)
 	_ = d.db.QueryRow("SELECT COUNT(*) FROM languages").Scan(&info.LanguageCount)
 	_ = d.db.QueryRow("SELECT value FROM meta WHERE key = 'embedding_model'").Scan(&info.EmbeddingModel)
+	_ = d.db.QueryRow("SELECT value FROM meta WHERE key = 'dataset_version'").Scan(&info.DatasetVersion)
+	_ = d.db.QueryRow("SELECT value FROM meta WHERE key = 'dataset_sha256'").Scan(&info.DatasetSHA256)
+	_ = d.db.QueryRow("SELECT value FROM meta WHERE key = 'built_at'").Scan(&info.BuiltAt)
 	return info
 }
 

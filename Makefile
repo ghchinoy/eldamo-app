@@ -7,7 +7,7 @@ ELDAMO_DB_PATH  ?= dist/eldamo.db
 WAILS           ?= $(HOME)/go/bin/wails
 GO_TAGS         ?= -tags "sqlite_fts5"
 
-.PHONY: help fetch-xml build-db-fts build-db build-db-vertex build-frontend build-app check eval dev clean
+.PHONY: help fetch-xml check-dataset-update build-db-fts build-db build-db-vertex build-frontend build-app check eval dev clean
 
 help:
 	@echo "Eldamo App Build System"
@@ -19,15 +19,16 @@ help:
 	@echo "  GEMINI_API_KEY   - Google Gemini API key for generating 768-dim embeddings"
 	@echo ""
 	@echo "Available Targets:"
-	@echo "  make fetch-xml      Download eldamo-data.xml from ELDAMO_XML_URL to ELDAMO_XML_PATH"
-	@echo "  make build-db-fts   Build SQLite database with structured dictionary & FTS5 (Go Engine)"
-	@echo "  make build-db       Build SQLite database with Gemini Embedding 2 vectors (Go Engine)"
-	@echo "  make eval           Run search quality benchmark against active SQLite database (Go Engine)"
-	@echo "  make build-frontend Build Vite + Lit Web Components bundle"
-	@echo "  make build-app      Compile Wails Go desktop binary"
-	@echo "  make check          Run type-checking and Go compilation verifications"
-	@echo "  make dev            Launch application in Wails live development mode"
-	@echo "  make clean          Clean build artifacts and temporary data"
+	@echo "  make fetch-xml            Download eldamo-data.xml from ELDAMO_XML_URL to ELDAMO_XML_PATH"
+	@echo "  make check-dataset-update Check pfstrack/eldamo master for dataset updates vs active database"
+	@echo "  make build-db-fts         Build SQLite database with structured dictionary & FTS5 (Go Engine)"
+	@echo "  make build-db             Build SQLite database with Gemini Embedding 2 vectors (Go Engine)"
+	@echo "  make eval                 Run search quality benchmark against active SQLite database (Go Engine)"
+	@echo "  make build-frontend       Build Vite + Lit Web Components bundle"
+	@echo "  make build-app            Compile Wails Go desktop binary"
+	@echo "  make check                Run type-checking and Go compilation verifications"
+	@echo "  make dev                  Launch application in Wails live development mode"
+	@echo "  make clean                Clean build artifacts and temporary data"
 
 # 1. Download XML Dataset
 fetch-xml:
@@ -35,6 +36,10 @@ fetch-xml:
 	@echo "Downloading Eldamo XML from $(ELDAMO_XML_URL) -> $(ELDAMO_XML_PATH)..."
 	@curl -sSL "$(ELDAMO_XML_URL)" -o "$(ELDAMO_XML_PATH)"
 	@echo "✓ Download complete. File size: $$(du -h $(ELDAMO_XML_PATH) | cut -f1)"
+
+# 1b. Check for Dataset Updates
+check-dataset-update:
+	@ELDAMO_DB_PATH="$(ELDAMO_DB_PATH)" go run $(GO_TAGS) ./cmd/builder -check-update
 
 # 2. Build SQLite DB (FTS5 / Structured only)
 build-db-fts:

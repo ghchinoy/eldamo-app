@@ -62,6 +62,9 @@ export interface DBInfo {
   language_count: number;
   embedding_model: string;
   size_bytes: number;
+  dataset_version?: string;
+  dataset_sha256?: string;
+  built_at?: string;
 }
 
 export function onDBProgress(callback: (event: ProgressEvent) => void): () => void {
@@ -272,6 +275,9 @@ function getMockResponse<T>(cmd: string, _args?: Record<string, unknown>): T {
       language_count: 48,
       embedding_model: "gemini-embedding-2",
       size_bytes: 157286400,
+      dataset_version: "0.8.13",
+      dataset_sha256: "4e561d4dfc15919d300adcb3ef8cb93298cb0b6fe0291f8fd1bef93abeea7979",
+      built_at: "2026-07-22T15:13:45Z",
     } as unknown as T;
   }
   if (cmd === "get_app_version") {

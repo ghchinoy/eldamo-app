@@ -1,11 +1,12 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { invokeApi, loadApiKey, saveApiKey, loadGeminiModel, saveGeminiModel } from "../api";
+import { invokeApi, loadApiKey, saveApiKey, loadGeminiModel, saveGeminiModel, DBInfo } from "../api";
 import { getThemePreference, setThemePreference, ThemePreference } from "../services/theme";
 
 @customElement("eldamo-settings-view")
 export class EldamoSettingsView extends LitElement {
   @property({ type: String }) dbStatus = "Checking database status...";
+  @property({ type: Object }) dbInfo?: DBInfo;
   @property({ type: Boolean }) inProgress = false;
   @property({ type: Number }) progressPercent = 0;
   @property({ type: String }) statusText = "";
@@ -219,6 +220,16 @@ export class EldamoSettingsView extends LitElement {
                 <div class="card">
                   <h3 class="card-title">Active Database Status</h3>
                   <div class="card-desc">${this.dbStatus}</div>
+
+                  ${this.dbInfo?.exists
+                    ? html`
+                        <div style="font-size: 0.85rem; color: var(--eldamo-text-secondary); display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--eldamo-surface-border);">
+                          <div><strong style="color: var(--eldamo-text-primary);">Eldamo Dataset Version:</strong> v${this.dbInfo.dataset_version || "0.8.13"}</div>
+                          ${this.dbInfo.built_at ? html`<div><strong style="color: var(--eldamo-text-primary);">Database Built At:</strong> ${this.dbInfo.built_at}</div>` : ""}
+                          ${this.dbInfo.dataset_sha256 ? html`<div><strong style="color: var(--eldamo-text-primary);">Dataset SHA256:</strong> <code style="font-size: 0.78rem;">${this.dbInfo.dataset_sha256.substring(0, 16)}...</code></div>` : ""}
+                        </div>
+                      `
+                    : ""}
 
                   ${this.inProgress || this.statusText
                     ? html`

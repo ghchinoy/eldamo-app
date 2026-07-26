@@ -1,16 +1,18 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { invokeApi } from "../api";
+import { invokeApi, DBInfo } from "../api";
 
 @customElement("eldamo-about-modal")
 export class AboutModal extends LitElement {
   @property({ type: Boolean }) open = false;
   @state() private version = "";
+  @state() private dbInfo?: DBInfo;
 
   async connectedCallback() {
     super.connectedCallback();
     try {
       this.version = await invokeApi<string>("get_app_version");
+      this.dbInfo = await invokeApi<DBInfo>("get_db_info");
     } catch {
       this.version = "0.1.3";
     }
@@ -148,7 +150,7 @@ export class AboutModal extends LitElement {
 
         <div class="section">
           <div class="section-title">Data Credits</div>
-          Eldamo language dataset compiled and maintained by <strong>Paul Strack</strong> at
+          Eldamo language dataset (v${this.dbInfo?.dataset_version || "0.8.13"}) compiled and maintained by <strong>Paul Strack</strong> at
           <a href="https://eldamo.org" target="_blank" rel="noopener">Eldamo.org</a>.
         </div>
 

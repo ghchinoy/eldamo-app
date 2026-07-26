@@ -648,6 +648,7 @@ export class EldamoApp extends LitElement {
           ? html`
               <eldamo-settings-view
                 .activeTab=${this.settingsTab}
+                .dbInfo=${this.dbInfo}
                 .dbStatus=${this.dbMissing
                   ? "No database loaded"
                   : `${this.dbInfo.path || "dist/eldamo.db"} loaded (${this.dbInfo.word_count.toLocaleString()} entries)`}

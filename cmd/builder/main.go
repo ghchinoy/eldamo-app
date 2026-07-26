@@ -135,7 +135,18 @@ func parseXML(xmlPath string) (*ParsedDataset, error) {
 
 	content := string(data)
 
-	if idx := strings.Index(content, "<eldamo"); idx != -1 {
+	if idx := strings.Index(content, "<word-data"); idx != -1 {
+		endIdx := strings.Index(content[idx:], ">")
+		if endIdx != -1 {
+			tag := content[idx : idx+endIdx]
+			if vIdx := strings.Index(tag, "version=\""); vIdx != -1 {
+				vStr := tag[vIdx+9:]
+				if vEnd := strings.Index(vStr, "\""); vEnd != -1 {
+					dataset.Version = vStr[:vEnd]
+				}
+			}
+		}
+	} else if idx := strings.Index(content, "<eldamo"); idx != -1 {
 		endIdx := strings.Index(content[idx:], ">")
 		if endIdx != -1 {
 			tag := content[idx : idx+endIdx]
@@ -663,6 +674,91 @@ func generateEmbeddingsVertex(project, location string, words []Word, cachePath 
 	return result, nil
 }
 
+func checkDatasetUpdate(dbPath string) {
+	fmt.Println("=== Eldamo Dataset Update Check ===")
+	if _, err := os.Stat(dbPath); os.IsNotExist(err) {
+		fmt.Printf("Active database not found at %s. Run 'make build-db-fts' or 'make build-db' to generate.\n", dbPath)
+		return
+	}
+
+	sqlite_vec.Auto()
+	db, err := sql.Open("sqlite3", dbPath)
+	if err != nil {
+		fmt.Printf("Error opening active database %s: %v\n", dbPath, err)
+		return
+	}
+	defer db.Close()
+
+	var dbVersion, dbSHA, builtAt string
+	_ = db.QueryRow("SELECT value FROM meta WHERE key = 'dataset_version'").Scan(&dbVersion)
+	_ = db.QueryRow("SELECT value FROM meta WHERE key = 'dataset_sha256'").Scan(&dbSHA)
+	_ = db.QueryRow("SELECT value FROM meta WHERE key = 'built_at'").Scan(&builtAt)
+
+	fmt.Printf("Active Database (%s):\n", dbPath)
+	fmt.Printf("  • Shipped Version:  v%s (built %s)\n", dbVersion, builtAt)
+	if len(dbSHA) >= 16 {
+		fmt.Printf("  • Shipped SHA256:   %s...\n", dbSHA[:16])
+	} else {
+		fmt.Printf("  • Shipped SHA256:   %s\n", dbSHA)
+	}
+
+	upstreamURL := "https://raw.githubusercontent.com/pfstrack/eldamo/master/src/data/eldamo-data.xml"
+	fmt.Printf("\nFetching upstream dataset header from %s...\n", upstreamURL)
+
+	resp, err := http.Get(upstreamURL)
+	if err != nil {
+		fmt.Printf("Error fetching upstream dataset: %v\n", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		fmt.Printf("HTTP Error fetching upstream dataset: %s\n", resp.Status)
+		return
+	}
+
+	upstreamData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("Error reading upstream dataset: %v\n", err)
+		return
+	}
+
+	h := sha256.New()
+	h.Write(upstreamData)
+	upstreamSHA := hex.EncodeToString(h.Sum(nil))
+
+	upstreamVersion := "unknown"
+	content := string(upstreamData)
+	if idx := strings.Index(content, "<word-data"); idx != -1 {
+		endIdx := strings.Index(content[idx:], ">")
+		if endIdx != -1 {
+			tag := content[idx : idx+endIdx]
+			if vIdx := strings.Index(tag, "version=\""); vIdx != -1 {
+				vStr := tag[vIdx+9:]
+				if vEnd := strings.Index(vStr, "\""); vEnd != -1 {
+					upstreamVersion = vStr[:vEnd]
+				}
+			}
+		}
+	}
+
+	fmt.Printf("Upstream Master (pfstrack/eldamo):\n")
+	fmt.Printf("  • Upstream Version: v%s\n", upstreamVersion)
+	if len(upstreamSHA) >= 16 {
+		fmt.Printf("  • Upstream SHA256:  %s...\n", upstreamSHA[:16])
+	} else {
+		fmt.Printf("  • Upstream SHA256:  %s\n", upstreamSHA)
+	}
+
+	fmt.Println("\nResult:")
+	if upstreamSHA == dbSHA {
+		fmt.Println("✓ Active database is 100% UP-TO-DATE with upstream master.")
+	} else {
+		fmt.Printf("⚡ UPDATE AVAILABLE! Upstream dataset has changed (v%s vs v%s).\n", upstreamVersion, dbVersion)
+		fmt.Println("  Run 'make fetch-xml && make build-db' (or 'make build-db-fts') to rebuild.")
+	}
+}
+
 func main() {
 	xmlPathFlag := flag.String("xml", "data/eldamo-data.xml", "Path to input eldamo-data.xml")
 	dbPathFlag := flag.String("db", "dist/eldamo.db", "Path to output eldamo.db")
@@ -671,17 +767,23 @@ func main() {
 	vertexProjectFlag := flag.String("vertex-project", "", "Google Cloud project ID for Vertex AI")
 	vertexLocationFlag := flag.String("vertex-location", "us-central1", "Google Cloud location for Vertex AI")
 	cachePathFlag := flag.String("cache", "spike/data/gemini_cache.json", "Cache file path")
+	checkUpdateFlag := flag.Bool("check-update", false, "Check upstream pfstrack/eldamo master dataset for updates against active SQLite database")
 	workersFlag := flag.Int("workers", 8, "Number of concurrent embedding workers")
 	flag.Parse()
-
-	xmlPath := *xmlPathFlag
-	if envXml := os.Getenv("ELDAMO_XML_PATH"); envXml != "" {
-		xmlPath = envXml
-	}
 
 	dbPath := *dbPathFlag
 	if envDb := os.Getenv("ELDAMO_DB_PATH"); envDb != "" {
 		dbPath = envDb
+	}
+
+	if *checkUpdateFlag {
+		checkDatasetUpdate(dbPath)
+		return
+	}
+
+	xmlPath := *xmlPathFlag
+	if envXml := os.Getenv("ELDAMO_XML_PATH"); envXml != "" {
+		xmlPath = envXml
 	}
 
 	apiKey := os.Getenv("GEMINI_API_KEY")
