@@ -1,6 +1,6 @@
 {
   "name": "eldamo-app",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Desktop app for the Eldamo Lexicon",
   "main": "index.js",
   "scripts": {

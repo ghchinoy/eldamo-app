@@ -18,7 +18,7 @@ export class StatusFooter extends LitElement {
     try {
       this.version = await invokeApi<string>("get_app_version");
     } catch {
-      this.version = "0.1.3";
+      this.version = "0.1.4";
     }
   }
 
@@ -129,7 +129,7 @@ export class StatusFooter extends LitElement {
               </div>
 
               <div>
-                Eldamo App v${this.version || "0.1.3"}
+                Eldamo App v${this.version || "0.1.4"}
               </div>
             `}
       </div>
