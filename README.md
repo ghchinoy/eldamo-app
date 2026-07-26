@@ -26,9 +26,9 @@ A cross-platform desktop dictionary and semantic concept search engine for J.R.R
 Download the latest pre-compiled release for **macOS** or **Linux** from [GitHub Releases](https://github.com/ghchinoy/eldamo-app/releases/latest).
 
 ```bash
-# macOS: Extract and launch Eldamo App
-unzip Eldamo-macOS.zip
-open Eldamo.app
+# macOS: Mount installer DMG and drag Eldamo Desktop to Applications
+hdiutil attach Eldamo-macOS.dmg
+# Or double-click Eldamo-macOS.dmg in Finder and drag to /Applications
 
 # Linux: Extract and run
 tar -xzvf Eldamo-Linux.tar.gz
