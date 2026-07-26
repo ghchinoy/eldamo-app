@@ -69,10 +69,28 @@ jobs:
           p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
 
-      - name: Sign macOS Application Bundle
+      - name: Sign & Notarize macOS Application (.app)
         if: matrix.os == 'macos-latest'
         run: |
-          codesign --deep --force --options runtime --sign "Developer ID Application: Hussain Chinoy (RXEF4MXK8Y)" "build/bin/Eldamo Desktop.app"
+          APP_PATH="build/bin/Eldamo Desktop.app"
+          
+          # 1. Sign .app bundle with hardened runtime
+          codesign --deep --force --options runtime --sign "Developer ID Application: Hussain Chinoy (RXEF4MXK8Y)" "$APP_PATH"
+          
+          # 2. Compress .app for notarization
+          ditto -c -k --keepParent "$APP_PATH" "build/bin/EldamoApp.zip"
+          
+          # 3. Submit .app zip to Apple Notarytool
+          echo "${{ secrets.APPLE_API_KEY_P8_BASE64 }}" | base64 --decode > AuthKey.p8
+          xcrun notarytool submit "build/bin/EldamoApp.zip" \
+            --key AuthKey.p8 \
+            --key-id ${{ secrets.APPLE_API_KEY_ID }} \
+            --issuer ${{ secrets.APPLE_API_ISSUER_ID }} \
+            --wait
+          
+          # 4. Staple ticket directly onto .app bundle before packaging DMG
+          xcrun stapler staple "$APP_PATH"
+          rm -f AuthKey.p8 "build/bin/EldamoApp.zip"
 
       - name: Package macOS Application (.dmg)
         if: matrix.os == 'macos-latest'
@@ -100,7 +118,7 @@ jobs:
             --issuer ${{ secrets.APPLE_API_ISSUER_ID }} \
             --wait
           xcrun stapler staple Eldamo-macOS.dmg
-          rm AuthKey.p8
+          rm -f AuthKey.p8
 
       - name: Package Linux Application (.tar.gz)
         if: matrix.os == 'ubuntu-latest'
