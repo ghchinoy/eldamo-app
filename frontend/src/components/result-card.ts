@@ -65,14 +65,20 @@ export class EldamoResultCard extends LitElement {
     sl-card {
       width: 100%;
       pointer-events: none;
-      transition: transform 0.15s ease, border-color 0.15s ease;
-      --border-color: var(--eldamo-surface-border);
-      background-color: var(--eldamo-surface);
     }
 
-    .card-wrapper:hover sl-card {
+    sl-card::part(base) {
+      background-color: var(--eldamo-surface);
+      border: 1px solid var(--eldamo-surface-border);
+      border-radius: 10px;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .card-wrapper:hover sl-card::part(base) {
       transform: translateY(-2px);
-      --border-color: var(--eldamo-gold-muted);
+      border-color: var(--eldamo-gold-bright);
+      box-shadow: 0 4px 16px rgba(243, 208, 130, 0.15);
     }
 
     .card-header {
@@ -84,8 +90,8 @@ export class EldamoResultCard extends LitElement {
 
     .word-form {
       font-family: var(--eldamo-font-serif);
-      font-size: 1.3rem;
-      font-weight: 600;
+      font-size: 1.35rem;
+      font-weight: 700;
       color: var(--eldamo-gold-bright);
     }
 
@@ -96,15 +102,17 @@ export class EldamoResultCard extends LitElement {
     }
 
     .gloss {
-      font-size: 1rem;
+      font-size: 1.05rem;
+      font-weight: 600;
       color: var(--eldamo-text-primary);
       margin-bottom: 0.5rem;
       line-height: 1.4;
     }
 
     .notes-preview {
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       color: var(--eldamo-text-secondary);
+      line-height: 1.5;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;

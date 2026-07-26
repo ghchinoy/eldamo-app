@@ -1,6 +1,6 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { invokeApi, loadApiKey, saveApiKey } from "../api";
+import { invokeApi, loadApiKey, saveApiKey, loadGeminiModel, saveGeminiModel } from "../api";
 import { getThemePreference, setThemePreference, ThemePreference } from "../services/theme";
 
 @customElement("eldamo-settings-view")
@@ -13,6 +13,8 @@ export class EldamoSettingsView extends LitElement {
   @state() private activeTab: "appearance" | "database" | "apikey" = "appearance";
   @state() private themePref: ThemePreference = "auto";
   @state() private apiKey = "";
+  @state() private geminiModel = "gemini-3.5-flash-lite";
+  @state() private customModelText = "";
   @state() private dbOption: "fts" | "vectors" = "vectors";
   @state() private customDbUrl = "";
   @state() private savedNotice = false;
@@ -114,6 +116,15 @@ export class EldamoSettingsView extends LitElement {
     super.connectedCallback();
     this.themePref = getThemePreference();
     this.apiKey = await loadApiKey();
+    const savedModel = await loadGeminiModel();
+    if (savedModel === "gemini-3.5-flash-lite" || savedModel === "gemini-3.6-flash") {
+      this.geminiModel = savedModel;
+    } else if (savedModel) {
+      this.geminiModel = "custom";
+      this.customModelText = savedModel;
+    } else {
+      this.geminiModel = "gemini-3.5-flash-lite";
+    }
   }
 
   private handleThemeChange(pref: ThemePreference) {
@@ -121,8 +132,10 @@ export class EldamoSettingsView extends LitElement {
     setThemePreference(pref);
   }
 
-  private handleSaveApiKey() {
+  private handleSaveAIConfig() {
     saveApiKey(this.apiKey);
+    const targetModel = this.geminiModel === "custom" ? this.customModelText.trim() : this.geminiModel;
+    saveGeminiModel(targetModel || "gemini-3.5-flash-lite");
     this.savedNotice = true;
     setTimeout(() => {
       this.savedNotice = false;
@@ -164,7 +177,7 @@ export class EldamoSettingsView extends LitElement {
             @click=${() => (this.activeTab = "apikey")}
           >
             <sl-icon name="key"></sl-icon>
-            <span>Gemini API Key</span>
+            <span>Gemini AI</span>
           </div>
         </div>
 
@@ -263,12 +276,13 @@ export class EldamoSettingsView extends LitElement {
           ${this.activeTab === "apikey"
             ? html`
                 <div class="card">
-                  <h3 class="card-title">Gemini API Key</h3>
+                  <h3 class="card-title">Gemini API Key & Model Configuration</h3>
                   <div class="card-desc">
-                    Required for generating 768-dimensional semantic embeddings for Elvish concept vector search and the Lexicon Assistant.
+                    Configure your Gemini API key and model preferences for vector search and the RAG Lexicon Assistant. An API key is optional — if omitted or if a model error occurs, search results are shown as a fallback.
                   </div>
 
                   <div class="form-row">
+                    <label style="font-size: 0.85rem; font-weight: 600; color: var(--eldamo-text-primary);">Gemini API Key</label>
                     <sl-input
                       type="password"
                       placeholder="AIzaSy..."
@@ -277,9 +291,29 @@ export class EldamoSettingsView extends LitElement {
                       password-toggle
                     ></sl-input>
 
-                    <div class="btn-group">
-                      <sl-button variant="primary" @click=${this.handleSaveApiKey}>
-                        <sl-icon name="check-lg" slot="prefix"></sl-icon> Save API Key
+                    <label style="font-size: 0.85rem; font-weight: 600; color: var(--eldamo-text-primary); margin-top: 0.5rem;">Lexicon Assistant Model</label>
+                    <sl-select
+                      .value=${this.geminiModel}
+                      @sl-change=${(e: Event) => (this.geminiModel = (e.target as HTMLInputElement).value)}
+                    >
+                      <sl-option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite (Fast & low-cost — Recommended)</sl-option>
+                      <sl-option value="gemini-3.6-flash">gemini-3.6-flash (Higher quality)</sl-option>
+                      <sl-option value="custom">Custom model ID...</sl-option>
+                    </sl-select>
+
+                    ${this.geminiModel === "custom"
+                      ? html`
+                          <sl-input
+                            placeholder="e.g. gemini-3.1-flash-lite-preview"
+                            .value=${this.customModelText}
+                            @sl-input=${(e: Event) => (this.customModelText = (e.target as HTMLInputElement).value)}
+                          ></sl-input>
+                        `
+                      : ""}
+
+                    <div class="btn-group" style="margin-top: 0.5rem;">
+                      <sl-button variant="primary" @click=${this.handleSaveAIConfig}>
+                        <sl-icon name="check-lg" slot="prefix"></sl-icon> Save Settings
                       </sl-button>
                       ${this.savedNotice ? html`<sl-badge variant="success">Saved!</sl-badge>` : ""}
                     </div>

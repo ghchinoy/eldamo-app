@@ -14,6 +14,29 @@ export class EldamoSettingsModal extends LitElement {
   @state() private buildType: "fts" | "gemini" = "fts";
 
   static styles = css`
+    sl-dialog::part(panel) {
+      background-color: var(--eldamo-surface);
+      border: 1px solid var(--eldamo-surface-border);
+      border-radius: 14px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+      color: var(--eldamo-text-primary);
+    }
+
+    sl-dialog::part(header) {
+      border-bottom: 1px solid var(--eldamo-surface-border);
+    }
+
+    sl-dialog::part(title) {
+      color: var(--eldamo-gold-bright);
+      font-family: var(--eldamo-font-serif);
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
+
+    sl-dialog::part(footer) {
+      border-top: 1px solid var(--eldamo-surface-border);
+    }
+
     .setting-section {
       margin-bottom: 1.5rem;
     }

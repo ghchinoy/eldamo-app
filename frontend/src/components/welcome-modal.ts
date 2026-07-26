@@ -15,6 +15,29 @@ export class WelcomeModal extends LitElement {
       display: block;
     }
 
+    sl-dialog::part(panel) {
+      background-color: var(--eldamo-surface);
+      border: 1px solid var(--eldamo-surface-border);
+      border-radius: 14px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+      color: var(--eldamo-text-primary);
+    }
+
+    sl-dialog::part(header) {
+      border-bottom: 1px solid var(--eldamo-surface-border);
+    }
+
+    sl-dialog::part(title) {
+      color: var(--eldamo-gold-bright);
+      font-family: var(--eldamo-font-serif);
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
+
+    sl-dialog::part(footer) {
+      border-top: 1px solid var(--eldamo-surface-border);
+    }
+
     .welcome-container {
       display: flex;
       flex-direction: column;
@@ -58,31 +81,33 @@ export class WelcomeModal extends LitElement {
 
     .description {
       font-size: 0.95rem;
-      color: var(--eldamo-text);
-      line-height: 1.5;
+      color: var(--eldamo-text-primary);
+      line-height: 1.55;
     }
 
     .status-card {
       background-color: var(--eldamo-bg);
       border: 1px solid var(--eldamo-surface-border);
-      border-radius: 8px;
-      padding: 1rem;
+      border-radius: 10px;
+      padding: 1.1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.85rem;
     }
 
     .status-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      color: var(--eldamo-text-primary);
+      font-weight: 500;
     }
 
     .status-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.3rem 0.75rem;
+      padding: 0.35rem 0.85rem;
       border-radius: 20px;
       font-size: 0.85rem;
       font-weight: 600;
@@ -91,23 +116,28 @@ export class WelcomeModal extends LitElement {
     .status-badge.ready {
       background-color: rgba(34, 197, 94, 0.15);
       color: #4ade80;
-      border: 1px solid rgba(34, 197, 94, 0.3);
+      border: 1px solid rgba(34, 197, 94, 0.35);
     }
 
     .status-badge.missing {
       background-color: rgba(239, 68, 68, 0.15);
       color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.3);
+      border: 1px solid rgba(239, 68, 68, 0.35);
     }
 
     .action-banner {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      background-color: var(--eldamo-surface);
+      gap: 0.65rem;
+      background-color: var(--md-sys-color-surface-container-high, rgba(255, 255, 255, 0.05));
       border-radius: 8px;
-      padding: 0.75rem 1rem;
+      padding: 0.85rem 1.1rem;
       border-left: 4px solid var(--eldamo-primary);
+      color: var(--eldamo-text-primary);
+    }
+
+    .action-banner span {
+      color: var(--eldamo-text-primary) !important;
     }
 
     .opt-out {

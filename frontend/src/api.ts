@@ -145,6 +145,12 @@ export async function invokeApi<T>(cmd: string, args?: Record<string, unknown>):
     if (cmd === "get_api_key") {
       return (await app.GetAPIKey()) as T;
     }
+    if (cmd === "set_gemini_model") {
+      return (await app.SetGeminiModel(args?.model)) as T;
+    }
+    if (cmd === "get_gemini_model") {
+      return (await app.GetGeminiModel()) as T;
+    }
     if (cmd === "get_app_version") {
       return (await app.GetAppVersion()) as T;
     }
@@ -187,6 +193,38 @@ export async function loadApiKey(): Promise<string> {
     }
   }
   return key;
+}
+
+export function saveGeminiModel(model: string): void {
+  const trimmed = model.trim();
+  try {
+    localStorage.setItem("eldamo_gemini_model", trimmed);
+  } catch (e) {
+    console.error("Failed to save Gemini model to localStorage:", e);
+  }
+  if (isTauri || isWails()) {
+    invokeApi("set_gemini_model", { model: trimmed }).catch((err) => console.error("Error saving Gemini model in IPC:", err));
+  }
+}
+
+export async function loadGeminiModel(): Promise<string> {
+  let model = "";
+  if (isTauri || isWails()) {
+    try {
+      const savedModel = await invokeApi<string | null>("get_gemini_model");
+      if (savedModel) model = savedModel;
+    } catch (e) {
+      console.warn("Could not read Gemini model from IPC storage:", e);
+    }
+  }
+  if (!model) {
+    try {
+      model = localStorage.getItem("eldamo_gemini_model") || "";
+    } catch (e) {
+      // ignore
+    }
+  }
+  return model || "gemini-3.5-flash-lite";
 }
 
 function getMockResponse<T>(cmd: string, _args?: Record<string, unknown>): T {
@@ -237,7 +275,10 @@ function getMockResponse<T>(cmd: string, _args?: Record<string, unknown>): T {
     } as unknown as T;
   }
   if (cmd === "get_app_version") {
-    return "0.1.1" as unknown as T;
+    return "0.1.2" as unknown as T;
+  }
+  if (cmd === "get_gemini_model") {
+    return "gemini-3.5-flash-lite" as unknown as T;
   }
   if (cmd === "get_languages") {
     return [

@@ -12,13 +12,36 @@ export class AboutModal extends LitElement {
     try {
       this.version = await invokeApi<string>("get_app_version");
     } catch {
-      this.version = "0.1.1";
+      this.version = "0.1.2";
     }
   }
 
   static styles = css`
     :host {
       display: block;
+    }
+
+    sl-dialog::part(panel) {
+      background-color: var(--eldamo-surface);
+      border: 1px solid var(--eldamo-surface-border);
+      border-radius: 14px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+      color: var(--eldamo-text-primary);
+    }
+
+    sl-dialog::part(header) {
+      border-bottom: 1px solid var(--eldamo-surface-border);
+    }
+
+    sl-dialog::part(title) {
+      color: var(--eldamo-gold-bright);
+      font-family: var(--eldamo-font-serif);
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
+
+    sl-dialog::part(footer) {
+      border-top: 1px solid var(--eldamo-surface-border);
     }
 
     .about-header {
@@ -43,9 +66,10 @@ export class AboutModal extends LitElement {
     }
 
     .app-title {
+      font-family: var(--eldamo-font-serif);
       font-size: 1.4rem;
       font-weight: 700;
-      color: var(--eldamo-text);
+      color: var(--eldamo-gold-bright);
       margin: 0;
     }
 
@@ -114,7 +138,7 @@ export class AboutModal extends LitElement {
           <div class="logo-container">E</div>
           <div>
             <h2 class="app-title">Eldamo Lexicon Viewer</h2>
-            <span class="version-badge">Version ${this.version || "0.1.1"}</span>
+            <span class="version-badge">Version ${this.version || "0.1.2"}</span>
           </div>
         </div>
 

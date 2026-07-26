@@ -25,7 +25,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-const AppVersion = "0.1.1"
+const AppVersion = "0.1.2"
 
 type App struct {
 	ctx context.Context
@@ -248,6 +248,8 @@ type AssistantResponse struct {
 
 func ptr[T any](v T) *T { return &v }
 
+const DefaultGeminiModel = "gemini-3.5-flash-lite"
+
 func (a *App) AskAssistant(prompt string) (*AssistantResponse, error) {
 	if a.db == nil {
 		return nil, fmt.Errorf("database not loaded")
@@ -265,25 +267,32 @@ func (a *App) AskAssistant(prompt string) (*AssistantResponse, error) {
 		citations = append(citations, sr.Entry)
 	}
 
-	apiKey, _ := a.GetAPIKey()
-	if apiKey == nil || *apiKey == "" {
+	renderFallbackAnswer := func(note string) string {
 		if len(entries) == 0 {
-			return &AssistantResponse{
-				Answer: "I couldn't find relevant entries in the Eldamo lexicon for your query. Try searching for a specific Elvish word or English gloss.",
-			}, nil
+			return "I couldn't find relevant entries in the Eldamo lexicon for your query. Try searching for a specific Elvish word or English gloss."
 		}
-
 		var sb strings.Builder
 		sb.WriteString("Here are the top matching lexicon entries from Eldamo for your query:\n\n")
 		for _, e := range entries {
 			sb.WriteString(fmt.Sprintf("• **%s** (%s) — *%s*\n  Notes: %s\n\n", e.V, e.L, e.Gloss, e.NotesClean))
 		}
-		sb.WriteString("\n*(Add a Gemini API Key in Settings for AI-generated responses)*")
+		if note != "" {
+			sb.WriteString("\n" + note)
+		}
+		return sb.String()
+	}
 
+	apiKey, _ := a.GetAPIKey()
+	if apiKey == nil || *apiKey == "" {
 		return &AssistantResponse{
-			Answer:    sb.String(),
+			Answer:    renderFallbackAnswer("*(Add a Gemini API Key in Settings for AI-generated responses)*"),
 			Citations: citations,
 		}, nil
+	}
+
+	geminiModel := DefaultGeminiModel
+	if configuredModel, _ := a.GetGeminiModel(); configuredModel != nil && *configuredModel != "" {
+		geminiModel = *configuredModel
 	}
 
 	client := &http.Client{Timeout: 20 * time.Second}
@@ -310,12 +319,12 @@ func (a *App) AskAssistant(prompt string) (*AssistantResponse, error) {
 	}
 
 	bodyBytes, _ := json.Marshal(payload)
-	url := fmt.Sprintf("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=%s", *apiKey)
+	url := fmt.Sprintf("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s", geminiModel, *apiKey)
 
 	resp, err := client.Post(url, "application/json", bytes.NewReader(bodyBytes))
 	if err != nil {
 		return &AssistantResponse{
-			Answer:    fmt.Sprintf("Error calling Gemini API: %v. Showing grounding entries:\n\n%s", err, contextBuilder.String()),
+			Answer:    renderFallbackAnswer(fmt.Sprintf("*(AI response unavailable [%v] — showing lexicon search results instead)*", err)),
 			Citations: citations,
 		}, nil
 	}
@@ -324,7 +333,7 @@ func (a *App) AskAssistant(prompt string) (*AssistantResponse, error) {
 	if resp.StatusCode != http.StatusOK {
 		respBody, _ := io.ReadAll(resp.Body)
 		return &AssistantResponse{
-			Answer:    fmt.Sprintf("Gemini API error (HTTP %d): %s", resp.StatusCode, string(respBody)),
+			Answer:    renderFallbackAnswer(fmt.Sprintf("*(AI response unavailable [HTTP %d: %s] — showing lexicon search results instead)*", resp.StatusCode, strings.TrimSpace(string(respBody)))),
 			Citations: citations,
 		}, nil
 	}
@@ -341,7 +350,7 @@ func (a *App) AskAssistant(prompt string) (*AssistantResponse, error) {
 
 	if err := json.NewDecoder(resp.Body).Decode(&geminiResp); err != nil || len(geminiResp.Candidates) == 0 {
 		return &AssistantResponse{
-			Answer:    "Failed to parse Gemini response.",
+			Answer:    renderFallbackAnswer("*(AI response unavailable [failed to parse model output] — showing lexicon search results instead)*"),
 			Citations: citations,
 		}, nil
 	}
@@ -1054,6 +1063,28 @@ func (a *App) SetAPIKey(key string) error {
 func (a *App) GetAPIKey() (*string, error) {
 	keyPath := filepath.Join(getConfigDir(), "gemini.key")
 	data, err := os.ReadFile(keyPath)
+	if err != nil {
+		return nil, nil
+	}
+	val := strings.TrimSpace(string(data))
+	if val == "" {
+		return nil, nil
+	}
+	return &val, nil
+}
+
+func (a *App) SetGeminiModel(model string) error {
+	dir := getConfigDir()
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return fmt.Errorf("failed to create config directory: %w", err)
+	}
+	modelPath := filepath.Join(dir, "gemini-model.txt")
+	return os.WriteFile(modelPath, []byte(strings.TrimSpace(model)), 0600)
+}
+
+func (a *App) GetGeminiModel() (*string, error) {
+	modelPath := filepath.Join(getConfigDir(), "gemini-model.txt")
+	data, err := os.ReadFile(modelPath)
 	if err != nil {
 		return nil, nil
 	}

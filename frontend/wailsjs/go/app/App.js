@@ -42,6 +42,10 @@ export function GetEntry(arg1) {
   return window['go']['app']['App']['GetEntry'](arg1);
 }
 
+export function GetGeminiModel() {
+  return window['go']['app']['App']['GetGeminiModel']();
+}
+
 export function GetLanguages() {
   return window['go']['app']['App']['GetLanguages']();
 }
@@ -76,6 +80,10 @@ export function SearchVectorQuery(arg1, arg2) {
 
 export function SetAPIKey(arg1) {
   return window['go']['app']['App']['SetAPIKey'](arg1);
+}
+
+export function SetGeminiModel(arg1) {
+  return window['go']['app']['App']['SetGeminiModel'](arg1);
 }
 
 export function StartBuildLocalDB(arg1) {

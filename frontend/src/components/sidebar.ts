@@ -92,6 +92,7 @@ export class EldamoSidebar extends LitElement {
       align-items: center;
       justify-content: space-between;
       padding: 0.5rem 0.5rem 1rem 0.5rem;
+      flex-shrink: 0;
     }
 
     .brand-wordmark {
@@ -107,6 +108,7 @@ export class EldamoSidebar extends LitElement {
       flex-direction: column;
       gap: 0.25rem;
       margin-bottom: 1.25rem;
+      flex-shrink: 0;
     }
 
     .nav-item {
@@ -147,6 +149,7 @@ export class EldamoSidebar extends LitElement {
 
     .history-scroll {
       flex: 1;
+      min-height: 0;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -193,6 +196,7 @@ export class EldamoSidebar extends LitElement {
       border-top: 1px solid var(--eldamo-surface-border);
       padding-top: 0.75rem;
       margin-top: auto;
+      flex-shrink: 0;
       display: flex;
       justify-content: space-between;
       align-items: center;

@@ -23,6 +23,8 @@ export function GetDBInfo():Promise<db.DBInfo>;
 
 export function GetEntry(arg1:number):Promise<db.FullEntryDetail>;
 
+export function GetGeminiModel():Promise<any>;
+
 export function GetLanguages():Promise<Array<db.LanguageMeta>>;
 
 export function GetSourcesList():Promise<Array<db.SourceMeta>>;
@@ -40,6 +42,8 @@ export function SearchVector(arg1:Array<number>,arg2:any):Promise<Array<db.Searc
 export function SearchVectorQuery(arg1:string,arg2:any):Promise<Array<db.SearchResult>>;
 
 export function SetAPIKey(arg1:string):Promise<void>;
+
+export function SetGeminiModel(arg1:string):Promise<void>;
 
 export function StartBuildLocalDB(arg1:boolean):Promise<void>;
 
