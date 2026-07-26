@@ -140,7 +140,7 @@ Releases are automated via GitHub Actions (`.github/workflows/release.yml`).
    git tag v0.x.x
    git push origin v0.x.x
    ```
-4. GitHub Actions automatically compiles native binaries on `macos-latest` (`Eldamo-macOS.dmg`, signed & notarized) and `ubuntu-latest` (`Eldamo-Linux.tar.gz`) and attaches them to the Release.
+4. GitHub Actions automatically compiles native binaries on `macos-latest` (`Eldamo-macOS.dmg`, signed & notarized), `windows-latest` (`Eldamo-Windows-installer.exe`), and `ubuntu-latest` (`Eldamo-Linux.tar.gz`) and attaches them to the Release.
 5. If the database schema or embeddings updated, build the compressed database package (`zip -j eldamo-db.zip dist/eldamo.db`) and upload it to the GitHub Release via `gh release upload v0.x.x eldamo-db.zip`.
 
 ---

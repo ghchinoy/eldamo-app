@@ -22,6 +22,9 @@ jobs:
           - os: ubuntu-latest
             asset_name: Eldamo-Linux.tar.gz
             build_tags: 'sqlite_fts5,webkit2_41'
+          - os: windows-latest
+            asset_name: Eldamo-Windows-installer.exe
+            build_tags: 'sqlite_fts5'
 
     steps:
       - name: Checkout Source
@@ -49,6 +52,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev
 
+      - name: Install Windows Build Dependencies (MinGW, SQLite & NSIS)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          choco install mingw nsis --no-progress
+          echo "C:\tools\mingw64\bin" >> $env:GITHUB_PATH
+          echo "C:\Program Files (x86)\NSIS" >> $env:GITHUB_PATH
+
+          # Download SQLite amalgamation headers for CGO (sqlite-vec)
+          Invoke-WebRequest -Uri "https://www.sqlite.org/2024/sqlite-amalgamation-3460100.zip" -OutFile "sqlite.zip"
+          Expand-Archive -Path "sqlite.zip" -DestinationPath "C:\sqlite"
+          echo "CGO_CFLAGS=-IC:\sqlite\sqlite-amalgamation-3460100" >> $env:GITHUB_ENV
+
       - name: Install Wails v2 CLI
         run: |
           go install github.com/wailsapp/wails/v2/cmd/wails@v2.13.0
@@ -57,9 +73,17 @@ jobs:
         run: |
           npm ci --prefix frontend
 
-      - name: Build Wails App
+      - name: Build Wails App (Non-Windows)
+        if: matrix.os != 'windows-latest'
         run: |
           wails build -tags "${{ matrix.build_tags }}"
+
+      - name: Build Wails App (Windows NSIS)
+        if: matrix.os == 'windows-latest'
+        env:
+          CGO_ENABLED: '1'
+        run: |
+          wails build -tags "${{ matrix.build_tags }}" -nsis
 
       - name: Import macOS Code Signing Certificates
         if: matrix.os == 'macos-latest'
@@ -125,6 +149,18 @@ jobs:
         run: |
           cd build/bin
           tar -czvf ../../Eldamo-Linux.tar.gz Eldamo
+
+      - name: Package Windows Application
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem -Path "build/bin" -Filter "*-installer.exe" | Select-Object -First 1
+          if ($installer) {
+            Copy-Item $installer.FullName "Eldamo-Windows-installer.exe"
+          } else {
+            $exe = Get-ChildItem -Path "build/bin" -Filter "*.exe" | Select-Object -First 1
+            Copy-Item $exe.FullName "Eldamo-Windows-installer.exe"
+          }
 
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2

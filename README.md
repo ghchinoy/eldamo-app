@@ -4,8 +4,6 @@ A cross-platform desktop dictionary and semantic concept search engine for J.R.R
 
 ![Eldamo Desktop App Screenshot](docs/assets/app_main.webp)
 
-> *Credit: README structure based on Mark Allen's ["How to Write a Great README for Your Public GitHub Project"](https://www.markcallen.com/how-to-write-a-great-readme-for-your-public-github-project/).*
-
 ---
 
 ## Table of Contents
@@ -23,12 +21,15 @@ A cross-platform desktop dictionary and semantic concept search engine for J.R.R
 
 ### Option 1: Download Desktop Binary (Recommended)
 
-Download the latest pre-compiled release for **macOS** or **Linux** from [GitHub Releases](https://github.com/ghchinoy/eldamo-app/releases/latest).
+Download the latest pre-compiled release for **macOS**, **Windows**, or **Linux** from [GitHub Releases](https://github.com/ghchinoy/eldamo-app/releases/latest).
 
 ```bash
 # macOS: Mount installer DMG and drag Eldamo Desktop to Applications
 hdiutil attach Eldamo-macOS.dmg
 # Or double-click Eldamo-macOS.dmg in Finder and drag to /Applications
+
+# Windows: Run Eldamo-Windows-installer.exe
+# (If SmartScreen prompts "Windows protected your PC", click "More info" -> "Run anyway")
 
 # Linux: Extract and run
 tar -xzvf Eldamo-Linux.tar.gz

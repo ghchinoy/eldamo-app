@@ -275,7 +275,7 @@ function getMockResponse<T>(cmd: string, _args?: Record<string, unknown>): T {
     } as unknown as T;
   }
   if (cmd === "get_app_version") {
-    return "0.1.2" as unknown as T;
+    return "0.1.3" as unknown as T;
   }
   if (cmd === "get_gemini_model") {
     return "gemini-3.5-flash-lite" as unknown as T;
