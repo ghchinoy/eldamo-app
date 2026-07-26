@@ -186,3 +186,20 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
 - **Lit Shadow DOM**: Because Lit components use Shadow DOM encapsulation by default, document-level CSS rules (like `.tengwar-text`) do not cross shadow boundaries. Always import `tengwarStyles` from `../styles/tengwar-styles` and include it in `static styles = [tengwarStyles, css`...`]` for any component rendering Tengwar glyphs (`result-card`, `entry-detail-modal`, `transliterator-bar`).
 - **Header Navigation**: When extending `viewMode` in `header.ts` and `eldamo-app.ts`, ensure header bar render conditionals use explicit mode checks (`this.viewMode === "concordance" ? ... : ""`) rather than an unconditional `else` fallback, to avoid leaking header controls across tabs.
 
+### Release & Version Management
+- **Never hand-edit version strings.** The version appears in 6 files/8 occurrences (`internal/app/app.go`, `wails.json`, `frontend/package.json`, `frontend/src/api.ts`, `frontend/src/components/about-modal.ts` x2, `frontend/src/components/status-footer.ts` x2). Always use `make bump-version VERSION=0.x.x` (built via `cmd/bumpversion`), which updates all of them atomically and validates consistency.
+- Full release process is documented in `docs/DEVELOPER_GUIDE.md` §5 — follow it exactly (bump → check → tag → push → CI builds → `make package-db-release` → upload DB asset).
+- **Release asset filenames are a public contract.** `mithlond-web`'s download landing page (`~/projects/mithlond-web/public/apps/eldamo-desktop/index.html`) hardcodes the exact asset names `Eldamo-macOS.dmg`, `Eldamo-Windows-installer.exe`, `Eldamo-Linux.tar.gz`. If you rename release assets in `.github/workflows/release.yml`, you MUST update that page too, or its download buttons will silently 404.
+
+### macOS Notarization Gotcha
+- The notarization ticket must be stapled to the **`.app` bundle itself** (`xcrun stapler staple "build/bin/Eldamo Desktop.app"`) **before** packaging into a DMG — not just stapled to the DMG. Stapling only the DMG leaves the extracted `.app` (once dragged to `/Applications`) without an embedded ticket, forcing Gatekeeper to verify online; any network hiccup then surfaces as a misleading "app is damaged" error instead of a clear offline-verification message.
+
+### Windows CGO Build Requirements
+- `windows-latest` GitHub Actions runners have no C compiler or SQLite headers by default. Building `sqlite-vec-go-bindings` requires installing MinGW-w64 (`choco install mingw`) AND separately downloading the SQLite amalgamation zip to get `sqlite3.h`, then pointing `CGO_CFLAGS` at it. See the `Install Windows Build Dependencies` step in `release.yml`.
+
+### Eldamo Dataset Version Parsing
+- The upstream dataset's version lives in the **`<word-data version="X">`** root tag (e.g. `0.8.13`), not a hypothetical `<eldamo>` tag. `cmd/builder`'s `parseXML` and `checkDatasetUpdate` both parse this correctly now — don't reintroduce the old `<eldamo` search pattern.
+
+### Terminology
+- Use **"Lexicon Grounded AI"** in user-facing copy, never "RAG" (meaningless jargon to the target audience of Tolkien linguistics enthusiasts).
+
