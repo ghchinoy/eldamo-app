@@ -280,7 +280,7 @@ export class EldamoSettingsView extends LitElement {
                 <div class="card">
                   <h3 class="card-title">Gemini API Key & Model Configuration</h3>
                   <div class="card-desc">
-                    Configure your Gemini API key and model preferences for vector search and the RAG Lexicon Assistant. An API key is optional — if omitted or if a model error occurs, search results are shown as a fallback.
+                    Configure your Gemini API key and model preferences for vector search and the Lexicon Assistant. An API key is optional — if omitted or if a model error occurs, search results are shown as a fallback.
                   </div>
 
                   <div class="form-row">

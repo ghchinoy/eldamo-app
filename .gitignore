@@ -2,8 +2,10 @@
 data/*.xml
 dist/*.db
 dist/*.db.bak
+dist/*.zip
 *.db
 *.db.bak
+*.zip
 *.building
 spike/data/*.json
 *.cache.json

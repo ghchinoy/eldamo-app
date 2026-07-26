@@ -223,7 +223,7 @@ export class EldamoChatBar extends LitElement {
       <div class="chat-container">
         <div class="chat-header">
           <h2 class="chat-title">Eldamo Lexicon Assistant</h2>
-          <sl-badge variant="neutral">RAG Grounded AI</sl-badge>
+          <sl-badge variant="neutral">Lexicon Grounded AI</sl-badge>
         </div>
 
         <div class="message-list">

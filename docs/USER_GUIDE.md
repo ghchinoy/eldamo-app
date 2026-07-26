@@ -13,7 +13,7 @@ Welcome to **Eldamo App**, a modern desktop lexicon application and concept sear
 5. [Language Taxonomy & Filtering](#5-language-taxonomy--filtering)
 6. [Exploring Word Entries & Etymologies (Right Rail)](#6-exploring-word-entries--etymologies-right-rail)
 7. [Tengwar Transliterator Tool](#7-tengwar-transliterator-tool)
-8. [Lexicon Assistant (RAG Chat)](#8-lexicon-assistant-rag-chat)
+8. [Lexicon Assistant (AI Chat)](#8-lexicon-assistant-ai-chat)
 9. [Settings, Appearance & Gemini API Key](#9-settings-appearance--gemini-api-key)
 10. [Offline Usage & Fallback Behavior](#10-offline-usage--fallback-behavior)
 
@@ -28,7 +28,7 @@ Key capabilities:
 - **Multilingual Concept Search**: Search by intent or meaning using Gemini Embedding 2 vectors (768-dimensional L2-normalized embeddings).
 - **Live Tengwar Rendering**: Automatic Elvish script transliteration on search cards and entry details using Glaemscribe and bundled web fonts (Annatar, Eldamar, Parmaite).
 - **Side-by-Side Etymology Panel**: Inspect word forms, derivations, cognates, child words, and citations in a persistent right rail without losing your search context.
-- **Lexicon Assistant**: RAG-grounded AI chat interface to ask questions about Elvish grammar, etymologies, and word roots.
+- **Lexicon Assistant**: Lexicon-grounded AI chat interface to ask questions about Elvish grammar, etymologies, and word roots.
 - **Material 3 Neutral Blue Theme**: Clean light and dark modes with system auto-adaptation.
 
 ---
@@ -116,11 +116,11 @@ Select **Tengwar** from the sidebar to open the free-text transliterator:
 
 ---
 
-## 8. Lexicon Assistant (RAG Chat)
+## 8. Lexicon Assistant (AI Chat)
 
 Select **Lexicon Assistant** from the sidebar to interact with the grounded AI assistant:
 - Ask questions like *"What are the different Quenya words for ocean?"* or *"Explain the etymology of Gilthoniel"*.
-- The assistant performs a RAG vector search across the Eldamo corpus, grounds the response in authentic dataset entries, and renders clickable citation chips that open directly in the Right Rail.
+- The assistant performs a vector search across the Eldamo corpus, grounds the response in authentic dataset entries, and renders clickable citation chips that open directly in the Right Rail.
 
 ---
 

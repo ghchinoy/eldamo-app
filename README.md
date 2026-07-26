@@ -65,7 +65,7 @@ make dev
 - **Hybrid Search Engine**: Instant exact keyword search and optional semantic concept search using 768-dim L2-normalized vector embeddings.
 - **Glaemscribe Tengwar Engine**: Live Elvish script transliteration rendered on search cards, detail views, and a dedicated **Tengwar Transliterator** tool with bundled Annatar, Eldamar, and Parmaite web fonts.
 - **Side-by-Side Etymology Panel**: Persistent right-rail inspector displaying headword details, parent root derivations, cross-language cognates, child words, and manuscript attestations (`PE17`, `Let`, `WJ`).
-- **Lexicon Assistant**: RAG-grounded AI chat interface to ask natural-language questions about Elvish grammar, etymologies, and word roots with interactive citation chips.
+- **Lexicon Assistant**: Lexicon-grounded AI chat interface to ask natural-language questions about Elvish grammar, etymologies, and word roots with interactive citation chips.
 - **Material 3 Neutral Blue Theme**: Clean light/dark modes with system auto-adaptation and offline local Shoelace UI components.
 
 ---
