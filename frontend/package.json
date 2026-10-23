@@ -13,9 +13,9 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "esbuild": "^0.28.1",
+    "esbuild": "^0.28.2",
     "typescript": "^7.0.2",
-    "vite": "^8.1.5"
+    "vite": "^8.3.5"
   },
   "dependencies": {
     "@shoelace-style/shoelace": "^2.20.1",
